@@ -17,7 +17,7 @@ class DetailPembelianController extends Controller
     public function index(Request $request, $no_pembelian) : mixed
     {
         $pembelian = Pembelian::find($no_pembelian);
-        if($pembelian == null || $pembelian->karyawan->nik != Auth::guard("karyawan")->user()->nik){
+        if($pembelian == null || $pembelian->karyawan->nik != Auth::guard("karyawan")->user()->nik || $pembelian->status_pembelian == true){
             return abort(404);
         }
 
