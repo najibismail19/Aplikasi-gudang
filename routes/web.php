@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailPembelianController;
 use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -73,6 +74,15 @@ Route::group(["middleware" => "auth:karyawan"], function () {
     Route::post("/pembelian/produk", [DetailPembelianController::class, "store"]);
     Route::post("/pembelian/{no_pembelian}/produk/{kode_produk}", [DetailPembelianController::class, "update"]);
     Route::delete("/pembelian/{no_pembelian}/produk/{kode_produk}", [DetailPembelianController::class, "delete"]);
+
+
+
+    // Penerimaan
+    Route::get("/penerimaan", [PenerimaanController::class, "index"]);
+    Route::post("/penerimaan", [PenerimaanController::class, "store"]);
+    Route::get("/penerimaan/tambah-penerimaan", [PenerimaanController::class, "tambahPenerimaan"]);
+    Route::get("/penerimaan/search-penerimaan", [PenerimaanController::class, "searchPenerimaan"]);
+    Route::get("/penerimaan/get-detail-pembelian/{no_pembelian}", [PenerimaanController::class, "getDetailPembelian"]);
 
 
     // Logout

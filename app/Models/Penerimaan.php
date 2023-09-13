@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Penerimaan extends Model
 {
@@ -16,4 +17,14 @@ class Penerimaan extends Model
     public $timestamps = false;
 
     protected $guarded = [];
+
+    public function karyawan() : BelongsTo
+    {
+        return $this->belongsTo(Karyawan::class, "nik", "nik");
+    }
+
+    public function pembelian() : BelongsTo
+    {
+        return $this->belongsTo(Pembelian::class, "no_pembelian", "no_pembelian");
+    }
 }

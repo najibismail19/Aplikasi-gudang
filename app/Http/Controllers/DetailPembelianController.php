@@ -22,7 +22,7 @@ class DetailPembelianController extends Controller
         }
 
         if ($request->ajax()) {
-            $detailPembelian = DetailPembelian::select("*")->with(["produk"]);
+            $detailPembelian = DetailPembelian::select("*")->with(["produk"])->where("no_pembelian", $no_pembelian);
             return DataTables::of($detailPembelian)
                     ->addIndexColumn()
                     ->editColumn('nama_produk', function (DetailPembelian $detailPembelian) {

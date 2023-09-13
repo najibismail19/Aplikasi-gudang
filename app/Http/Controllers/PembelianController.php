@@ -14,46 +14,53 @@ use Illuminate\Http\RedirectResponse;
 
 class PembelianController extends Controller
 {
-    public function getNoPembelian()
-    {
-        $time = explode("-", date("Y-m-d"));
-        $time = implode($time);
-        $time = substr($time, 2, 6);
-        $purchase = DB::table('pembelian')
-             ->select(DB::raw('substr(no_pembelian, 4, 6) as no, no_pembelian'))
-             ->where(DB::raw('substr(no_pembelian, 4, 6)'), "=", $time)
-             ->get();
-        if($purchase != null) {
-            $no = (int) substr($purchase[0]->no_pembelian, 9, 4);
-            $no++;
-            $no_purchase = "PGD" . $time .  sprintf("%04s", $no);
-        } else {
-            $no_purchase = "PGD" . $time . "0001";
-        }
-        return $no_purchase;
-    }
 
     public function index(Request $request) : Response | JsonResponse
     {
         if ($request->ajax()) {
-            $pembelian = Pembelian::select("*")->with(["karyawan", "supplier"]);
+            $filter["status_pembelian"] = false;
+            if(request()->hasHeader("X-SRC-Pembelian"))
+            {
+                $filter["status_pembelian"] = true;
+            }
+            $pembelian = Pembelian::select("*")->filter(filter : $filter)->with(["karyawan", "supplier"]);
             return DataTables::of($pembelian)
                     ->addIndexColumn()
                     ->editColumn('supplier', function (Pembelian $pembelian) {
+
                         return $pembelian->supplier->nama;
+
                     })
                     ->editColumn('karyawan', function (Pembelian $pembelian) {
+
                         return $pembelian->karyawan->nama;
+
                     })
                     ->editColumn('total_produk', function (Pembelian $pembelian) {
+
                         return count($pembelian->detailPembelian);
+
                     })
                     ->editColumn('tanggal', function (Pembelian $pembelian) {
+
                         return Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('dddd, D MMMM Y');
+
                     })
                     ->addColumn('action', function($pembelian){
-                        $btn ="<a class='editpembelian btn btn-primary mx-1'><i class='align-middle' data-feather='edit'></i></a>";
-                        $btn = $btn."<a id='$pembelian->no_pembelian' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+
+                        $btn = "";
+                        $icon = "check";
+
+                        if(!request()->hasHeader("X-SRC-Pembelian")) {
+
+                            $btn = $btn. "<a id='$pembelian->no_pembelian' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+                            $icon = "edit";
+
+                        }
+
+                        $actionClick = ($icon == 'edit') ? 'editPembelian' : 'pilihPembelian';
+                        $btn = $btn . "<a class='$actionClick btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='$icon'></i></a>";
+
                         return $btn;
                     })
                     ->rawColumns(['action'])
@@ -66,7 +73,7 @@ class PembelianController extends Controller
     public function tambahPembelian(Request $request) : Response
     {
         return response()->view("pembelian.pembelian-tambah", [
-            "no_pembelian" => $this->getNoPembelian(),
+            "no_pembelian" => generateNo(code : "PGD", table : "pembelian"),
             "karyawan" => Auth::guard("karyawan")->user()
         ]);
     }

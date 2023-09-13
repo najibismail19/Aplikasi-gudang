@@ -19,6 +19,13 @@ class Pembelian extends Model
 
     protected $guarded = [];
 
+    public function scopeFilter($query, array $filter)
+    {
+        $query->when($filter["status_pembelian"] ?? false, function ($query, $search) {
+            return $query->where('status_pembelian', true);
+        });
+    }
+
     public function karyawan() : BelongsTo
     {
         return $this->belongsTo(Karyawan::class, "nik", "nik");
