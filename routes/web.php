@@ -72,7 +72,7 @@ Route::group(["middleware" => "auth:karyawan"], function () {
     Route::get("/pembelian/{no_pembelian}", [DetailPembelianController::class, "index"])->name("detail.pembelian");
     Route::post("/pembelian/detail-pembelian", [DetailPembelianController::class, "storeAllDetailPembelian"]);
     Route::post("/pembelian/produk", [DetailPembelianController::class, "store"]);
-    Route::post("/pembelian/{no_pembelian}/produk/{kode_produk}", [DetailPembelianController::class, "update"]);
+    Route::post("/pembelian/detail-pembelian/update", [DetailPembelianController::class, "update"]);
     Route::delete("/pembelian/{no_pembelian}/produk/{kode_produk}", [DetailPembelianController::class, "delete"]);
 
 

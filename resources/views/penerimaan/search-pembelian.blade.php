@@ -1,39 +1,32 @@
-<div class="modal fade" id="modalSearchPembelian">
+<div class="modal fade" id="modalSearchPembelian" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-xl modal-dialog">
       <div class="modal-content">
-        <div class="modal-header  bg-info">
-          <h4 class="modal-title">Pilih Pembelian</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Search Penerimaan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body bg-light">
-            <div class="card-body pb-2">
-                <div class="table-responsive p-2">
-                  <table class="table align-items-center mb-0 data-pembelian" style="width: 100%">
+        <div class="modal-body">
+            <div class="table-responsive p-2">
+                <table class="table align-items-center mb-0 data-pembelian" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
                         <th  style="width: 15%;">No Pembelian</th>
                         <th style="width: 15%;">Supplier</th>
                         <th>Tanggal</th>
-                        <th>Jumlah Produk</th>
                         <th>Total harga</th>
                         <th>Karywan Input</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                   </table>
-                </div>
-              </div>
+            </div>
         </div>
-        <div class="modal-footer justify-content-end">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
-      <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
   </div>
 <script>
 $(function () {
@@ -64,10 +57,6 @@ $(function () {
             {
                 data: 'tanggal',
                 name: 'tanggal'
-            },
-            {
-                data: 'total_produk',
-                name: 'total_produk'
             },
             {
                 data: 'total_keseluruhan',

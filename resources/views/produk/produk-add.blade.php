@@ -88,12 +88,12 @@
                                 $(form).find("#"+ prefix + "").addClass("is-invalid");
                             })
                         }
-                        if(data["success"]){
+                        if(data.success){
                             $("#modalTambahProduk").modal("hide");
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'success',
-                                    text:  data["success"],
+                                    text:  data.success,
                                 })
                             $('.data-produk').DataTable().ajax.reload(null, false);
                         }

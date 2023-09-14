@@ -2,44 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailPembelian;
-use App\Models\DetailPenerimaan;
-use App\Models\Pembelian;
-use App\Models\Penerimaan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Repository\PenerimaanRepository;
+use App\Repository\PembelianRepository;
+use App\Repository\DetailPembelianRepository;
+use App\Repository\DetailPenerimaanRepository;
+use App\Repository\KartuStokRepository;
+use App\Repository\StokRepository;
 
 class PenerimaanController extends Controller
 {
+    private PembelianRepository $pembelian;
+
+    private DetailPembelianRepository $detailPembelian;
+
+    private PenerimaanRepository $penerimaan;
+
+    private DetailPenerimaanRepository $detailPenerimaan;
+
+    private KartuStokRepository $kartuStok;
+
+    private StokRepository $stok;
+
+    public function __construct(PenerimaanRepository $penerimaan, PembelianRepository $pembelian, DetailPembelianRepository $detailPembelian, DetailPenerimaanRepository $detailPenerimaan, KartuStokRepository $kartuStok, StokRepository $stok) {
+
+        $this->penerimaan = $penerimaan;
+
+        $this->pembelian = $pembelian;
+
+        $this->detailPembelian = $detailPembelian;
+
+        $this->detailPenerimaan = $detailPenerimaan;
+
+        $this->kartuStok = $kartuStok;
+
+        $this->stok = $stok;
+    }
+
+
     public function index(Request $request) : Response | JsonResponse
     {
         if ($request->ajax()) {
-            $penerimaan = Penerimaan::select("*")->with(["karyawan", "pembelian"]);
-            return DataTables::of($penerimaan)
-                    ->addIndexColumn()
-                    ->editColumn('karyawan', function (Penerimaan $penerimaan) {
-                        return $penerimaan->karyawan->nama;
-                    })
-                    ->editColumn('tanggal', function (Penerimaan $penerimaan) {
-                        return Carbon::parse($penerimaan->tanggal_penerimaan)->isoFormat('dddd, D MMMM Y');
-                    })
-                    ->addColumn('action', function($penerimaan){
-                        $btn ="<a class='editpembelian btn btn-primary mx-1'><i class='align-middle' data-feather='edit'></i></a>";
-                        $btn = $btn."<a id='$penerimaan->no_penerimaan' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+
+            $data = $this->penerimaan->all();
+
+            return $this->penerimaan->getDatatable($data);
+
         }
 
         return response()->view("penerimaan.penerimaan");
     }
 
-    public function tambahPenerimaan()
+    public function tambahPenerimaan() : Response
     {
         return response()->view("penerimaan.penerimaan-tambah",[
             "no_penerimaan" => generateNo(code : "PNN", table : "penerimaan"),
@@ -57,26 +76,29 @@ class PenerimaanController extends Controller
     {
         if ($request->ajax()) {
 
-            $pembelian = Pembelian::find($no_pembelian);
+            $pembelian = $this->pembelian->find($no_pembelian);
             $pembelian = [
                 "no_pembelian" => $pembelian->no_pembelian,
                 "nama_supplier" => $pembelian->supplier->nama,
-                "tanggal_pembelian" => $pembelian->tanggal_pembelian,
+                "tanggal_pembelian" => Carbon::parse($pembelian->tanggal_pembelian)->format("Y-m-d"),
                 "karyawan_input" => $pembelian->karyawan->nama,
+                "deskripsi" => $pembelian->deskripsi,
                 "total_produk" => count($pembelian->detailPembelian),
-                "total_keseluruhan" => $pembelian->total_keseluruhan,
+                "total_keseluruhan" => "Rp. " . number_format($pembelian->total_keseluruhan),
             ];
 
 
-            $detail_pembelian = DetailPembelian::with(["produk"])->where("no_pembelian", $no_pembelian)->get();
+            $detail_pembelian = $this->detailPembelian->allByNoPembelian($no_pembelian);
+
             $array = [];
+
             foreach($detail_pembelian as $detail) {
                 $array[] = [
                     "kode_produk" => $detail->kode_produk,
                     "nama_produk" => $detail->produk->nama,
                     "jumlah"  => $detail->jumlah,
                     "harga" => $detail->harga,
-                    "total_harga" => $detail->total_harga,
+                    "total_harga" => "Rp. " . number_format($detail->total_harga),
                 ];
             }
 
@@ -84,32 +106,99 @@ class PenerimaanController extends Controller
         }
     }
 
-    public function store(Request $request) {
+    public function store(Request $request) : JsonResponse
+    {
         if($request->ajax()) {
             $no_pembelian = $request->input("no_pembelian");
+            try {
+                DB::beginTransaction();
+                $pembelian = $this->pembelian->find($no_pembelian);
 
-            $pembelian = Pembelian::find($no_pembelian);
-            $pembelian->status_penerimaan = true;
-            $pembelian->update();
+                $this->pembelian->update($no_pembelian, [
+                    "status_penerimaan" => true
+                ]);
 
-            $detail_penerimaan = [];
-            foreach($pembelian->detailPembelian as $detail) {
-                $pivot = $detail->pivot;
-                $detail_penerimaan[] = [
+                $detail_pembelian = $this->detailPembelian->allByNoPembelian($no_pembelian);
+
+                $detail_pembelian->each(function ($detail) use ($request) {
+
+                    $detail_penerimaan = [
+                        "no_penerimaan" => $request->input("no_penerimaan"),
+                        "kode_produk" => $detail->kode_produk,
+                        "jumlah" => $detail->jumlah
+                    ];
+
+                    $this->detailPenerimaan->insert($detail_penerimaan);
+
+                    $kartu_stock = $this->kartuStok->findByLockGudangProduk(getIdGudang(), $detail->kode_produk);
+
+                            if($kartu_stock) {
+                              $dataKartuStok1 = [
+                                    "id_gudang" => getIdGudang(),
+                                    "kode_produk" => $detail->kode_produk,
+                                    "no_referensi" => $request->input("no_penerimaan"),
+                                    "saldo_awal" => $kartu_stock->saldo_akhir,
+                                    "stock_in" => $detail->jumlah,
+                                    "stock_out" => 0,
+                                    "saldo_akhir" => $kartu_stock->saldo_akhir + $detail->jumlah,
+                                    "deskripsi" => $request->input("deskripsi")
+                                ];
+
+                                $this->kartuStok->insert($dataKartuStok1);
+
+                            } else {
+
+                                $dataKartuStok2 = [
+                                    "id_gudang" => getIdGudang(),
+                                    "kode_produk" => $detail->kode_produk,
+                                    "no_referensi" => $request->input("no_penerimaan"),
+                                    "saldo_awal" => 0,
+                                    "stock_in" => $detail->jumlah,
+                                    "stock_out" => 0,
+                                    "saldo_akhir" => $detail->jumlah,
+                                    "deskripsi" => $request->input("deskripsi")
+                                ];
+
+                                $this->kartuStok->insert($dataKartuStok2);
+                            }
+
+
+                            $stock = $this->stok->findByLockGudangProduk(getIdGudang(), $detail->kode_produk);
+
+                            if($stock){
+
+                                $this->stok->update(getIdGudang(), $detail->kode_produk, [
+                                    "stok" => DB::raw("stok + $detail->jumlah")
+                                ]);
+
+                            } else {
+
+                                $dataStok = [
+                                    "id_gudang" => getIdGudang(),
+                                    "kode_produk" => $detail->kode_produk,
+                                    "stok" => $detail->jumlah
+                                ];
+
+                                $this->stok->insert($dataStok);
+                            }
+                        });
+
+
+                $dataPenerimaan = [
                     "no_penerimaan" => $request->input("no_penerimaan"),
-                    "kode_produk" => $pivot->kode_produk,
-                    "jumlah" => $pivot->jumlah
+                    "no_pembelian" => $request->input("no_pembelian"),
+                    "nik" => $request->input("nik"),
+                    "tanggal_penerimaan" => $request->input("tanggal_penerimaan"),
+                    "deskripsi" => $request->input("deskripsi")
                 ];
+                $this->penerimaan->insert($dataPenerimaan);
+                DB::commit();
+                return response()->json(["success" => "Data Pembelian Berhasil Diterima"]);
+            } catch (\Throwable $e){
+                DB::rollback();
+                return response()->json(["error" => "Error 500"]);
             }
 
-            Penerimaan::insert([
-                "no_penerimaan" => $request->input("no_penerimaan"),
-                "no_pembelian" => $request->input("no_pembelian"),
-                "nik" => $request->input("nik"),
-                "tanggal_penerimaan" => $request->input("tanggal_penerimaan"),
-                "deskripsi" => $request->input("deskripsi")
-            ]);
-            DetailPenerimaan::insert($detail_penerimaan);
         }
     }
 }

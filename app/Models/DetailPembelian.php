@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class DetailPembelian extends Pivot
 {
-    use HasFactory;
-
     protected $table = "detail_pembelian";
     protected $foreignKey = "no_pembelian";
     protected $reletedKey = "kode_produk";

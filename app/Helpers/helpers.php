@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
     function generateNo($code, $table)
@@ -20,5 +21,9 @@ use Illuminate\Support\Facades\DB;
             $generateNO = $code . $time . "0001";
         }
         return $generateNO;
+    }
+
+    function getIdGudang() {
+        return Auth::guard("karyawan")->user()->id_gudang;
     }
 ?>

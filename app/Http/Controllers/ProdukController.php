@@ -2,49 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
+use App\Repository\ProdukRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Yajra\DataTables\DataTables;
 
 class ProdukController extends Controller
 {
+    private ProdukRepository $produk;
+
+    public function __construct(ProdukRepository $produk) {
+        $this->produk = $produk;
+    }
+
     public function index(Request $request) : Response | JsonResponse
     {
 
         if ($request->ajax()) {
-            $produk = Produk::select("*");
-            return DataTables::of($produk)
-                    ->addIndexColumn()
-                    ->editColumn('jenis', function (Produk $produk) {
-                       return ($produk->jenis == true ) ? "Barang Jadi" : "Barang Mentah";
-                    })
-                    ->addColumn('action', function($produk){
-                        $icon = "check";
-                        $btn = "";
-                        if(!request()->hasHeader("X-SRC-Produk")) {
-                            $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                            $icon = "edit";
-                        }
-                        $actionClick = ($icon == "edit") ? "editProduk" : "pilihProduk";
-
-                        $btn = $btn. "<a class='$actionClick btn btn-primary mx-1'
-                            data-kode-produk='$produk->kode_produk'
-                            data-nama='$produk->nama'
-                            data-satuan='$produk->satuan'
-                            data-harga='$produk->harga'
-                            data-jenis='$produk->jenis'
-                            data-gambar='$produk->gambar'
-                            data-deskripsi='$produk->deskripsi'
-                        ><i class='align-middle' data-feather='$icon'></i></a>";
-
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+            return $this->produk->getDatatable();
         }
 
         return response()->view("produk.produk");
@@ -76,10 +53,11 @@ class ProdukController extends Controller
                 $validation["gambar"] = $fileName;
                 $request->file('gambar')->storeAs('photos/produk', $fileName, 'public');
             }
-            $result = Produk::insert($validation);
-            if($result){
-                return response()->json(["success" => "Berhasil Menambah Produk"]);
-            }
+
+            // Insert Produk Repository
+            $this->produk->insert($validation);
+            return response()->json(["success" => "Berhasil Menambah Produk"]);
+
         } catch(ValidationException $exception) {
             $response = $exception->validator->errors()->toArray();
             return response()->json(["error" => $response]);
@@ -96,7 +74,7 @@ class ProdukController extends Controller
 
     public function update(Request $request, $kode_produk) : JsonResponse
     {
-        $produk = Produk::find($kode_produk);
+        $produk = $this->produk->find($kode_produk);
 
         if($produk == null) abort(404);
 
@@ -146,17 +124,18 @@ class ProdukController extends Controller
     public function delete(Request $request, $kode_produk) : JsonResponse
     {
         if($request->ajax()){
-            $produk = Produk::find($kode_produk);
+
+            $produk = $this->produk->find($kode_produk);
             $path = "photos/produk/";
             $file_path = $path . $produk->gambar;
+
             if($produk->image != null) {
                 Storage::disk("public")->delete($file_path);
             }
-            $query = $produk->delete();
-            if($query) {
-                return response()->json(["success" => "Berhasil Dihapus"]);
-            }
-            return response()->json(["error" => "Gagal"]);
+
+            $this->produk->delete($kode_produk);
+
+            return response()->json(["success" => "Berhasil Dihapus"]);
         }
     }
 }

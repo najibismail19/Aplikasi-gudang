@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class DetailPenerimaan extends Pivot
@@ -15,5 +16,15 @@ class DetailPenerimaan extends Pivot
     protected $reletedKey = "kode_produk";
     public $timestamps = false;
 
-    protected $guarded = [];
+    protected $fillable = [
+        "no_penerimaan",
+        "kode_produk",
+        "jumlah",
+    ];
+
+    public function produk() : BelongsTo
+    {
+        return $this->belongsTo(Produk::class, "kode_produk", "kode_produk");
+    }
+
 }

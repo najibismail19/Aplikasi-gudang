@@ -2,69 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pembelian;
+use App\Repository\PembelianRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Yajra\DataTables\DataTables;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 class PembelianController extends Controller
 {
+    private PembelianRepository $pembelian;
+
+    public function __construct(PembelianRepository $pembelian) {
+        $this->pembelian = $pembelian;
+    }
 
     public function index(Request $request) : Response | JsonResponse
     {
         if ($request->ajax()) {
-            $filter["status_pembelian"] = false;
-            if(request()->hasHeader("X-SRC-Pembelian"))
-            {
-                $filter["status_pembelian"] = true;
-            }
-            $pembelian = Pembelian::select("*")->filter(filter : $filter)->with(["karyawan", "supplier"]);
-            return DataTables::of($pembelian)
-                    ->addIndexColumn()
-                    ->editColumn('supplier', function (Pembelian $pembelian) {
-
-                        return $pembelian->supplier->nama;
-
-                    })
-                    ->editColumn('karyawan', function (Pembelian $pembelian) {
-
-                        return $pembelian->karyawan->nama;
-
-                    })
-                    ->editColumn('total_produk', function (Pembelian $pembelian) {
-
-                        return count($pembelian->detailPembelian);
-
-                    })
-                    ->editColumn('tanggal', function (Pembelian $pembelian) {
-
-                        return Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('dddd, D MMMM Y');
-
-                    })
-                    ->addColumn('action', function($pembelian){
-
-                        $btn = "";
-                        $icon = "check";
-
-                        if(!request()->hasHeader("X-SRC-Pembelian")) {
-
-                            $btn = $btn. "<a id='$pembelian->no_pembelian' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                            $icon = "edit";
-
-                        }
-
-                        $actionClick = ($icon == 'edit') ? 'editPembelian' : 'pilihPembelian';
-                        $btn = $btn . "<a class='$actionClick btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='$icon'></i></a>";
-
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+            return $this->pembelian->getDatatable();
         }
 
         return response()->view("pembelian.pembelian");
@@ -96,9 +52,8 @@ class PembelianController extends Controller
                 "deskripsi" => ["max:255"]
             ]);
 
-            $query = Pembelian::insert($pembelian);
-            if($query) {
-                return redirect()->route("detail.pembelian", [ "no_pembelian" => $pembelian["no_pembelian"]]);
-            }
+            $this->pembelian->insert($pembelian);
+
+            return redirect()->route("detail.pembelian", [ "no_pembelian" => $pembelian["no_pembelian"]]);
         }
 }

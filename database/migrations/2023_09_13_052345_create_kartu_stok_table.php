@@ -23,7 +23,8 @@ return new class extends Migration
             $table->bigInteger("saldo_akhir")->nullable(false)->default(0);
             $table->text("deskripsi")->nullable();
 
-            $table->primary(["id_gudang", "kode_produk"]);
+            $table->foreign("id_gudang")->on("gudang")->references("id_gudang");
+            $table->foreign("kode_produk")->on("produk")->references("kode_produk");
         });
     }
 

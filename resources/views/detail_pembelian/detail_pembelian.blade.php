@@ -358,7 +358,7 @@
         } else{
             $.ajax({
                 headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-                url : "/pembelian/" + $("#no_pembelian").text() + "/produk/" + kode_produk,
+                url : "/pembelian/detail-pembelian/update",
                 type : "POST",
                 data : {
                     no_pembelian : $("#no_pembelian").text(),
