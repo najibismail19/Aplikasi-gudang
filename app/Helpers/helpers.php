@@ -26,4 +26,12 @@ use Illuminate\Support\Facades\DB;
     function getIdGudang() {
         return Auth::guard("karyawan")->user()->id_gudang;
     }
+
+    function getNamaKaryawan(){
+        return Auth::guard("karyawan")->user()->nama;
+    }
+
+    function getNik(){
+        return Auth::guard("karyawan")->user()->nik;
+    }
 ?>

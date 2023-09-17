@@ -22,7 +22,7 @@ class Pembelian extends Model
     public function scopeFilter($query, array $filter)
     {
         $query->when($filter["status_pembelian"] ?? false, function ($query, $search) {
-            return $query->where('status_pembelian', true);
+            return $query->where('status_pembelian', true)->where("status_penerimaan", false);
         });
     }
 

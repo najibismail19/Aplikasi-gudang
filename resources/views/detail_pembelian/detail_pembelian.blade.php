@@ -1,21 +1,122 @@
 @extends('template.template')
+@section('title')
+    <a href="{{ url("/pembelian") }}" style="float: left;" class="btn btn-warning"><i class="align-middle" data-feather="chevrons-left"></i>&nbsp;Back</a>
+@endsection
 @section('content')
 <div class="container-fluid p-0">
-    <div class="row">
-        <div class="col-md-6">
-            <h1 class="h3 mb-3"><strong>No</strong> Pembelian &nbsp;:&nbsp;<span id="no_pembelian">{{ $pembelian->no_pembelian }}</span></h1>
+    <div class="row justify-content-center">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="nama_karyawan" class="form-label">Nama Karyawan</label>
+                        <input type="text" class="form-control" id="nama_karyawan" value="{{ $pembelian->karyawan->nama }}" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="no_pembelian" class="form-label">No Pembelian</label>
+                        <input type="text" class="form-control" id="no_pembelian" readonly value="{{ $pembelian->no_pembelian }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tanggal_pembelian" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="tanggal_pembelian" value="{{ $tanggal_pembelian }}" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="nama_supplier" class="form-label">Supplier</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control"  placeholder="Cari Supplier..." id="nama_supplier" value="{{ $pembelian->supplier->nama }}" readonly>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between bg-light" style="margin-top: 2rem; padding-top: 2rem;">
+                        <div class="col-md-3">
+                            <div class="row justify-content-center">
+                                <h2 style="margin-bottom: -.5rem;">Tambah Pembelian</h2>
+                                <div class="row g-3 d-flex mb-3 justify-content-between">
+                                    <label for="kode_produk" class="form-label" style="margin-bottom: -.5rem;">Kode Produk</label>
+                                    <div class="col-md-6">
+                                      <input type="text" id="kode_produk" class="form-control" placeholder="Kode Produk" readonly>
+                                    </div>
+                                    <button class="btn btn-success col-md-6" id="searchProduk"><i data-feather="plus"></i>&nbsp;Cari Produk</button>
+                                  </div>
+                                <div class="mb-3">
+                                    <label for="nama_Produk" class="form-label">Produk</label>
+                                    <input type="text" class="form-control" id="nama_produk" placeholder="Nama Produk" readonly>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="jenis_produk" class="form-label">Jenis Produk</label>
+                                    <input type="text" class="form-control" id="jenis_produk" placeholder="Jenis Produk" readonly>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="harga" class="form-label">Harga</label>
+                                    <input type="number" class="form-control" id="harga" placeholder="Harga" readonly>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="jumlah" class="form-label">Jumlah</label>
+                                    <input type="number" class="form-control" id="jumlah" value="0">
+                                  </div>
+                                  <div class="mb-3">
+                                    <label for="total_harga" class="form-label">Total Harga</label>
+                                    <input type="text" class="form-control" id="total_harga" placeholder="Total Harga" readonly>
+                                  </div>
+                                  <div class="row" id="btn-action-produk">
+                                      <button class="btn btn-secondary col-md-5 mr-1" id="reset"><i data-feather="refresh-ccw"></i>&nbsp;Reset</button>
+                                      <button class="btn btn-primary col-md-5" id="tambah"><i data-feather="plus"></i>&nbsp;Tambah</button>
+                                      <button class="btn btn-primary col-md-5" id="ubah"><i data-feather="plus"></i>&nbsp;Ubah</button>
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
+                            <table class="table table-striped align-items-center mb-0" style="width: 100%">
+                                <thead>
+                                  <tr>
+                                    <th  style="width: 15%;">Kode Produk</th>
+                                    <th style="width: 15%;">Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Total Harga</th>
+                                    <th>Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="data-detail-pembelian">
+                                    <tr rowSpan="2" style="font: bold; background-color: rgba(154, 194, 196, .8);">
+                                        <th colspan="4"></th>
+                                        <th>Total</th>
+                                        <th id="table_total_keseluruhan" colspan="2"></th>
+                                    </tr>
+                                </tbody>
+                              </table>
+                              <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="mb-4 row">
+                                        <label for="nama_karyawan" class="col-sm-5 col-form-label">Jumlah Jenis Produk*</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" placeholder="Jumlah Produk" id="jumlah_jenis_produk" readonly>
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-success" style="float: right;" id="selesai_transaksi"><i data-feather="send"></i>&nbsp;Selesai dan sudahi Transaksi</button>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <a href="{{ url("/pembelian") }}" style="float: right;" class="btn btn-warning"><i class="align-middle" data-feather="chevrons-left"></i>&nbsp;Back</a>
-        </div>
-    </div>
+
+{{--
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="col-xl-6 col-xxl-5 d-flex">
+                <div class="col-xl-6 col-xxl-5 h-50">
                     <div class="w-100">
                         <div class="row">
 							<div class="card">
+                                <div class="card-header bg-warning">
+                                    <h1 class="h3 mb-3"><strong>No</strong> Pembelian &nbsp;:&nbsp;<span id="no_pembelian">{{ $pembelian->no_pembelian }}</span></h1>
+                                </div>
 								<div class="card-body">
                                       <div class="mb-3 row">
                                         <label for="nama_karyawan" class="col-sm-4 col-form-label">Karyawan Input*</label>
@@ -42,64 +143,89 @@
                                             <textarea class="form-control" placeholder="Deskripsi..." name="deskripsi"  id="deskripsi" style="height: 100px" readonly>{{ $pembelian->deskripsi  }}</textarea>
                                         </div>
                                       </div>
+                                      <hr>
+                                      <div class="card-footer text-muted">
+                                          <div class="mb-3 row">
+                                            <label for="deskripsi" class="col-sm-4 col-form-label">Total Keseluruhan</label>
+                                            <div class="col-sm-8">
+                                                 <input id="total_keseluruhan" type="text" class="form-control p-3" name="total_keseluruhan" readonly/>
+                                            </div>
+                                          </div>
+                                            <button class="btn-lg btn-success" id="selesai_pembelian" style="float: right;"><i class="align-middle" data-feather="shopping-cart"></i>&nbsp;Selesai Pembelian</button>
+                                      </div>
 								</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-6 col-xxl-7">
+                <div class="col-xl-3">
                     <div class="card">
+                        <div class="card-header">
+                            <h1 class="h3 mb-3"><strong>Keterangan</strong> Produk &nbsp;</h1>
+                        </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="my-2 row">
-                                        <label for="quantity" class="col-sm-6">Kode Produk*</label>
-                                        <div class="col-sm-6">
+                                        <label for="quantity" class="col-sm-5">Kode Produk*</label>
+                                        <div class="col-sm-7">
                                             <input type="hidden" id="kode_produk" name="kode_produk">
                                             <input type="text" class="form-control" placeholder="Kode Produk" id="input_kode_produk" readonly>
                                         </div>
                                     </div>
                                     <div class="my-2 row">
-                                        <label for="nama_produk" class="col-sm-6">Nama*</label>
-                                        <div class="col-sm-6">
+                                        <label for="nama_produk" class="col-sm-5">Nama*</label>
+                                        <div class="col-sm-7">
                                             <input type="text" class="form-control" placeholder="Nama Produk" id="nama_produk" name="nama_produk" readonly>
                                         </div>
                                     </div>
                                     <div class="my-2 row">
-                                        <label for="harga" class="col-sm-6">Harga*</label>
-                                        <div class="col-sm-6">
+                                        <label for="harga" class="col-sm-5">Harga*</label>
+                                        <div class="col-sm-7">
                                             <input type="number" class="form-control" id="harga" name="harga" value="0" readonly>
                                         </div>
                                     </div>
                                     <div class="my-2 row">
-                                        <label for="jenis" class="col-sm-6">Jenis*</label>
-                                        <div class="col-sm-6">
+                                        <label for="jenis" class="col-sm-5">Jenis*</label>
+                                        <div class="col-sm-7">
                                             <input type="text" class="form-control" id="jenis" name="jenis" value="0" readonly>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label for="jumlah" class="col-sm-6">Jumlah*</label>
-                                        <div class="col-sm-6">
+                                        <label for="jumlah" class="col-sm-5">Jumlah*</label>
+                                        <div class="col-sm-7">
                                             <input type="number" class="form-control"  id="jumlah" name="jumlah" value="1">
                                             <small class="text-danger jumlah-in-valid"></small>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="mb-2 mt-2 row">
-                                        <label for="total_harga" class="col-sm-6">Total Harga*</label>
-                                        <div class="col-sm-6">
+                                        <label for="total_harga" class="col-sm-5">Total Harga*</label>
+                                        <div class="col-sm-7">
                                             <input type="number" class="form-control" placeholder="Total Harga" id="total_harga" name="total_harga" readonly>
                                         </div>
                                     </div>
 
-                                    <div class="mt-2 mb-1 row" id="btn-produk">
-                                        <button class="btn btn-primary" id="save">Save</button>
-                                        <button class="btn btn-secondary" id="cancel">Cancel</button>
-                                        <button class="btn btn-primary" id="update">Update</button>
+                                    <div class="card-footer text-muted">
+                                        <div class="mt-2 mb-1 row" id="btn-produk">
+                                            <button class="btn btn-primary" id="save">Save</button>
+                                            <button class="btn btn-secondary" id="cancel">Cancel</button>
+                                            <button class="btn btn-primary" id="update">Update</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="h3 mb-3"><strong>Gambar</strong> Produk &nbsp;</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
                                     <div class="img h-75">
                                         <img src="" alt="" style="width : 100%;height : 100%;" alt="Gambar Produk" id="gambar_produk">
                                     </div>
@@ -107,7 +233,6 @@
                                         <input type="text" class="form-control" placeholder="Search Item..." id="inputSearchItem" readonly>
                                         <button class="btn btn-primary" id="searchProduk" ><i class="align-middle" data-feather="search"></i></button>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,20 +243,6 @@
                 <div class="col-12">
                     <div class="card mb-4">
                       <div class="card-header">
-                        <table class="table align-items-center mb-0" style="width: 40%;">
-                            <tr>
-                                <th>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Total Keseluruhan</span>
-                                        <input type="text" class="form-control" placeholder="Grand Total" id="total_keseluruhan" readonly>
-                                      </div>
-                                    {{-- <td><h3>Rp</h3></td> --}}
-                                    {{-- <input type="text" class="form-control" placeholder="Grand Total" id="grand_total" readonly> --}}
-                                    {{-- <td><h3>3000000</h3></td> --}}
-                                </th>
-                            </tr>
-                        </table>
-                        <button class="btn-lg btn-success" id="selesai_pembelian" style="float: right;"><i class="align-middle" data-feather="shopping-cart"></i>&nbsp;Selesai Pembelian</button>
                       </div>
                       <div class="card-body pb-2">
                         <div class="table-responsive p-2">
@@ -155,60 +266,64 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
 
 @endsection
 @push('script')
 <script>
-     $(function () {
-      let no_pembelian = $("#no_pembelian").text();
-      var table = $('.data-detail-pembelian').DataTable({
-          processing: true,
-          serverSide: true,
-          ajax: "/pembelian/" + no_pembelian,
-          columns: [
-            {
-                "data": 'DT_RowIndex',
-                 orderable: false,
-                 searchable: false
+    getDataDetailPembelian();
+
+    function getDataDetailPembelian()
+    {
+        $.ajax({
+            headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
+            url : "/pembelian/" + $("#no_pembelian").val(),
+            dataType : "json",
+            success: response => {
+                console.log(response.data);
+                $("#data-detail-pembelian tr:not(:last-child)").remove();
+                $("#table_total_keseluruhan").text("Rp. " + response.total_keseluruhan);
+
+                $("#jumlah_jenis_produk").val(response.jumlah_jenis_produk);
+
+                $.each(response.data, function (key, value) {
+                    let jenis = (value.jenis_produk == 0) ? "Barang Mentah" : "Barang Jadi" ;
+							$('#data-detail-pembelian').prepend(`<tr>
+										<td>`+value.kode_produk+`</td>
+										<td>`+value.nama_produk+`</td>
+										<td>`+ jenis +`</td>
+										<td>Rp. `+value.harga+`</td>
+										<td>`+value.jumlah+`</td>
+										<td>Rp. `+value.total_harga+`</td>
+										<td>
+                                            <button class="btn-sm btn-danger" id="delete" data-kode_produk=` + value.kode_produk + ` data-no_pembelian=` + value.no_pembelian + `>Delete</button>
+                                            <button class="btn-sm btn-primary" id="edit"
+                                                data-kode_produk=`+ value.kode_produk +`
+                                                data-nama_produk=`+ value.nama_produk +`
+                                                data-jenis=`+ value.jenis +`
+                                                data-jumlah=`+ value.jumlah +`
+                                                data-harga=`+ value.harga +`
+                                                data-total_harga=`+ value.total_harga +`
+                                            >Edit</button>
+                                        </td>
+										</tr>`);
+				})
+
             },
-            {
-                data: 'kode_produk',
-                name: 'kode_produk'
-            },
-            {
-                data: 'nama_produk',
-                name: 'produk.nama'
-            },
-            {
-                data: 'jumlah',
-                name: 'jumlah'
-            },
-            {
-                data: 'harga',
-                name: 'harga'
-            },
-            {
-                data: 'total_harga',
-                name: 'total_harga'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-          ],
-            drawCallback: function( settings ) {
-                feather.replace();
+            error: function(xhr,textStatus,thrownError) {
+            alert(xhr + "\n" + textStatus + "\n" + thrownError);
             }
-      });
-    });
+        });
+    }
+
+
+
     $(document).ready(function () {
-        $("#update").hide();
-        $("#cancel").hide();
+        // $("#gambar_produk").attr("src", "/storage/photos/produk/default.png");
+        $("#ubah").hide();
+        // $("#cancel").hide();
 // GET Modal Search Item
         $.ajax({
             headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
@@ -227,7 +342,7 @@
 // End Modal Search Item
     });
 
-    $(document).on("click", "#save", function () {
+    $(document).on("click", "#tambah", function () {
         let kode_produk = $("#kode_produk").val();
         let jumlah = $("#jumlah").val();
         let total_harga = $("total_harga").val();
@@ -254,7 +369,7 @@
                 url : "/pembelian/produk",
                 type : "POST",
                 data : {
-                    no_pembelian : $("#no_pembelian").text(),
+                    no_pembelian : $("#no_pembelian").val(),
                     kode_produk : $("#kode_produk").val(),
                     jumlah : $("#jumlah").val(),
                     harga : $("#harga").val(),
@@ -269,9 +384,8 @@
                                 title: 'success',
                                 text:  response["success"],
                             });
-                                refreshUI();
-                                $("#total_keseluruhan").val(reponse["total_keseluruhan"]);
-                                $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
+
+                            getDataDetailPembelian();
                         }
 
                         if(response["error"]) {
@@ -282,8 +396,8 @@
                                 text:  response["error"]
 
                             })
-                            refreshUI();
-                            $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
+
+                            getDataDetailPembelian();
                         }
                 }, error: function(data){
 
@@ -303,16 +417,14 @@
         }
     });
 
-    $(document).on("click", ".editDetailPembelian", function () {
+    $(document).on("click", "#edit", function () {
         let kode_produk = $(this).attr("data-kode_produk");
         let nama_produk = $(this).attr("data-nama_produk");
         let jenis = $(this).attr("data-jenis");
         let jumlah = $(this).attr("data-jumlah");
         let harga = $(this).attr("data-harga");
         let total_harga = $(this).attr("data-total_harga");
-        let gambar = $(this).attr("data-gambar");
 
-        $("#input_kode_produk").val(kode_produk);
         $("#kode_produk").val(kode_produk);
         $("#jumlah").val(jumlah);
         $("#harga").val(harga);
@@ -320,20 +432,26 @@
 
         let input_jenis = (jenis == 0) ? "Barang Mentah" : "Barang Jadi";
 
-        $("#jenis").val(input_jenis);
+        $("#jenis_produk").val(input_jenis);
         $("#nama_produk").val(nama_produk);
-        $("#btn-produk").addClass("d-flex justify-content-center");
-        $("#btn-produk  button").addClass("col-md-5 mx-1");
-        $("#save").hide();
-        $("#update").show();
-        $("#cancel").show();
+
+        // $("#btn-produk").addClass("d-flex justify-content-center");
+        // $("#btn-produk  button").addClass("col-md-5 mx-1");
+        $("#tambah").hide();
+        $("#ubah").show();
+        $("#searchProduk").hide();
         $(".search-produk").hide();
 
-        let file_gambar = ($.trim(gambar) != "") ? gambar : "default.png";
-        $("#gambar_produk").attr("src", "/storage/photos/produk/" + file_gambar);
+        // let file_gambar = ($.trim(gambar) != "") ? gambar : "default.png";
+        // $("#gambar_produk").attr("src", "/storage/photos/produk/" + file_gambar);
     });
 
-    $(document).on("click", "#update", function (e) {
+    $(document).on("click", "#reset", function (e) {
+        e.preventDefault();
+        refreshUI();
+    });
+
+    $(document).on("click", "#ubah", function (e) {
         // e.preventDefault();
         let kode_produk = $("#kode_produk").val();
         let jumlah = $("#jumlah").val();
@@ -361,7 +479,7 @@
                 url : "/pembelian/detail-pembelian/update",
                 type : "POST",
                 data : {
-                    no_pembelian : $("#no_pembelian").text(),
+                    no_pembelian : $("#no_pembelian").val(),
                     kode_produk : $("#kode_produk").val(),
                     jumlah : $("#jumlah").val(),
                     harga : $("#harga").val(),
@@ -376,8 +494,7 @@
                                 title: 'success',
                                 text:  response["success"]
                             })
-                            $("#total_keseluruhan").val(response["total_keseluruhan"]);
-                            $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
+                            getDataDetailPembelian();
                             refreshUI();
                         }
 
@@ -387,7 +504,7 @@
                                 title: 'error',
                                 text:  response["error"]
                             });
-                            $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
+                            getDataDetailPembelian();
                             refreshUI();
                         }
                 },
@@ -398,7 +515,7 @@
         }
     });
 
-    $(document).on('click', '.hapusDetailPembelian', function() {
+    $(document).on('click', '#delete', function() {
         let no_pembelian = $(this).attr("data-no_pembelian");
         let kode_produk = $(this).attr("data-kode_produk");
             Swal.fire({
@@ -423,8 +540,9 @@
                                 title: 'success',
                                 text:  response["success"],
                             })
-                                 $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
-                            }
+                            getDataDetailPembelian();
+                        }
+
 
                             if(response.error) {
                                 Swal.fire({
@@ -432,7 +550,7 @@
                                     title: 'error',
                                     text:  response["error"],
                                 })
-                                    $('.data-detail-pembelian').DataTable().ajax.reload(null, false);
+                                getDataDetailPembelian();
                             }
                         }
                     });
@@ -440,7 +558,7 @@
             })
         });
 
-        $(document).on("click","#selesai_pembelian", function () {
+        $(document).on("click","#selesai_transaksi", function () {
         Swal.fire({
             title: 'Apakah Ingin Menyelesaikan Pembelian?',
             icon: 'warning',
@@ -455,7 +573,7 @@
                     url : "/pembelian/detail-pembelian",
                     type : "POST",
                     data : {
-                        no_pembelian : $("#no_pembelian").text()
+                        no_pembelian : $("#no_pembelian").val()
                     },
                     dataType : "json",
                     success: response => {
@@ -465,9 +583,7 @@
                                 title: 'success',
                                 text:  response["success"]
                             });
-                            setTimeout(() => {
                                 window.location.href = "/pembelian";
-                            }, 2500);
                         }
                         if(response["error"]) {
                             Swal.fire({
@@ -488,22 +604,19 @@
     function refreshUI()
     {
         $("#kode_produk").val("");
-        $("#input_kode_produk").val("");
         $("#nama_produk").val("");
-        $("#jenis").val("-");
+        $("#jenis_produk").val("-");
         $("#jumlah").val("");
         $("#harga").val("");
         $("#total_harga").val("");
-        $("#btn-produk  button").removeClass("col-md-5 mx-1");
-        $("#save").show();
-        $("#update").hide();
-        $("#cancel").hide();
-        $(".search-produk").show();
-        $("#image_item").attr("src", "/storage/photos/produk/default.png");
+        $("#tambah").show();
+        $("#ubah").hide();
+        $("#searchProduk").show();
+        // $("#image_item").attr("src", "/storage/photos/produk/default.png");
     }
 
-    $(document).on("click", "#cancel", function () {
-        refreshUI();
-    });
+//     $(document).on("click", "#cancel", function () {
+//         refreshUI();
+//     });
 </script>
 @endpush

@@ -1,7 +1,12 @@
 <?php
 namespace App\Repository;
 
+use Illuminate\Http\JsonResponse;
+
 interface StokRepository {
+
+    public function getDatatable($jenis_barang) : JsonResponse;
+
     public function findByLockGudangProduk($id_gudang, $kode_produk);
 
     public function insert(array $array);

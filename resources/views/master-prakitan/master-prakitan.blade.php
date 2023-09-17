@@ -1,27 +1,25 @@
 @extends('template.template')
 
 @section('title')
-    Pembelian
+    Master Prakitan
 @endsection
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
               <div class="card-header">
-                <a href="{{ url("/pembelian/tambah-pembelian") }}" class="btn btn-success"> <i class="align-middle" data-feather="plus"></i>&nbsp;Add Pembelian</a>
+                <a href="{{ url("/master-prakitan/tambah-master-prakitan") }}" class="btn btn-success"> <i class="align-middle" data-feather="plus"></i>&nbsp;Tambah Master Prakitan</a>
               </div>
               <div class="card-body pb-2">
                 <div class="table-responsive p-2">
-                  <table class="table table-striped  align-items-center mb-0 data-pembelian" style="width: 100%">
+                  <table class="table table-striped  align-items-center mb-0 data-master-prakitan" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
-                        <th  style="width: 15%;">No Pembelian</th>
-                        <th style="width: 15%;">Supplier</th>
-                        <th>Tanggal</th>
-                        <th>Jumlah Produk</th>
-                        <th>Total harga</th>
-                        <th>Karywan Input</th>
+                        <th  style="width: 15%;">Kode Produk</th>
+                        <th style="width: 15%;">Nama</th>
+                        <th>Satuan</th>
+                        <th>Jenis Produk</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -39,10 +37,10 @@
     <script>
           $(function () {
 
-            var table = $('.data-pembelian').DataTable({
+            var table = $('.data-master-prakitan').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/pembelian",
+                ajax: "/master-prakitan",
                 columns: [
                     {
                         "data": 'DT_RowIndex',
@@ -50,28 +48,20 @@
                         searchable: false
                     },
                     {
-                        data: 'no_pembelian',
-                        name: 'no_pembelian'
+                        data: 'kode_produk',
+                        name: 'produk.kode_produk'
                     },
                     {
-                        data: 'supplier',
-                        name: 'supplier.nama'
+                        data: 'nama',
+                        name: 'produk.nama'
                     },
                     {
-                        data: 'tanggal',
-                        name: 'tanggal'
+                        data: 'satuan',
+                        name: 'produk.satuan'
                     },
                     {
-                        data: 'total_produk',
-                        name: 'total_produk'
-                    },
-                    {
-                        data: 'total_keseluruhan',
-                        name: 'total_keseluruhan'
-                    },
-                    {
-                        data: 'karyawan',
-                        name: 'karyawan.nama'
+                        data: 'jenis_produk',
+                        name: 'jenis_produk'
                     },
                     {
                         data: 'action',

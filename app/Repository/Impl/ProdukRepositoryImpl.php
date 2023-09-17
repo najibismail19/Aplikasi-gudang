@@ -10,7 +10,11 @@ class ProdukRepositoryImpl implements ProdukRepository{
 
     public function getDatatable(): JsonResponse
     {
-        $produk = Produk::select("*");
+        $filter_jenis["jenis_produk"] = false;
+        if(request()->hasHeader("X-SRC-PRK-Produk")){
+            $filter_jenis["jenis_produk"] = request()->header("X-SRC-PRK-Produk");
+        };
+        $produk = Produk::select("*")->filter(filter : $filter_jenis);
         return DataTables::of($produk)
                 ->addIndexColumn()
                 ->editColumn('jenis', function (Produk $produk) {
@@ -19,11 +23,13 @@ class ProdukRepositoryImpl implements ProdukRepository{
                 ->addColumn('action', function($produk){
                     $icon = "check";
                     $btn = "";
-                    if(!request()->hasHeader("X-SRC-Produk")) {
+                    if(!request()->hasHeader("X-SRC-Produk") && !request()->hasHeader("X-SRC-PRK-Produk")) {
                         $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
                         $icon = "edit";
                     }
                     $actionClick = ($icon == "edit") ? "editProduk" : "pilihProduk";
+
+                    $actionClick = (request()->header("X-SRC-PRK-Produk") == "P-M") ? "pilihProdukMentah" : $actionClick;
 
                     $btn = $btn. "<a class='$actionClick btn btn-primary mx-1'
                         data-kode-produk='$produk->kode_produk'

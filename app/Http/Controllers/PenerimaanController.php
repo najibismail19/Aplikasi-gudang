@@ -62,7 +62,6 @@ class PenerimaanController extends Controller
     {
         return response()->view("penerimaan.penerimaan-tambah",[
             "no_penerimaan" => generateNo(code : "PNN", table : "penerimaan"),
-            "karyawan" => Auth::guard("karyawan")->user()
         ]);
     }
 
@@ -96,6 +95,7 @@ class PenerimaanController extends Controller
                 $array[] = [
                     "kode_produk" => $detail->kode_produk,
                     "nama_produk" => $detail->produk->nama,
+                    "jenis_produk" => $detail->produk->jenis,
                     "jumlah"  => $detail->jumlah,
                     "harga" => $detail->harga,
                     "total_harga" => "Rp. " . number_format($detail->total_harga),

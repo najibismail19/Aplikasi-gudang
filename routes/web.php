@@ -3,9 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailPembelianController;
+use App\Http\Controllers\KartuStokController;
+use App\Http\Controllers\MasterPrakitanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Models\DetailPembelian;
@@ -83,6 +86,25 @@ Route::group(["middleware" => "auth:karyawan"], function () {
     Route::get("/penerimaan/tambah-penerimaan", [PenerimaanController::class, "tambahPenerimaan"]);
     Route::get("/penerimaan/search-penerimaan", [PenerimaanController::class, "searchPenerimaan"]);
     Route::get("/penerimaan/get-detail-pembelian/{no_pembelian}", [PenerimaanController::class, "getDetailPembelian"]);
+
+    // Kartu Stok
+    Route::get("/kartu-stok", [KartuStokController::class, "index"]);
+
+    // Stok
+    Route::get("/stok/barang-jadi", [StokController::class, "barangJadi"]);
+    Route::get("/stok/barang-mentah", [StokController::class, "barangMentah"]);
+
+    // Master Prakitan
+    Route::get("/master-prakitan", [MasterPrakitanController::class, "index"]);
+    Route::get("/master-prakitan/tambah-master-prakitan", [MasterPrakitanController::class, "tambahMasterPrakitan"]);
+    Route::get("/master-prakitan/get-modal-produk-jadi", [MasterPrakitanController::class, "getModalProdukJadi"]);
+    Route::get("/master-prakitan/get-modal-produk-mentah", [MasterPrakitanController::class, "getModalProdukMentah"]);
+    Route::get("/master-prakitan/get-detail-prakitan/{kode_produk_jadi}", [MasterPrakitanController::class, "getDetailMasterPerakitan"]);
+    Route::post("/master-prakitan/detail-master-prakitan/store", [MasterPrakitanController::class, "store"]);
+    Route::post("/master-prakitan/detail-master-prakitan/update", [MasterPrakitanController::class, "update"]);
+    Route::delete("/master-prakitan/{kode_produk_jadi}/produk/{kode_produk_mentah}", [MasterPrakitanController::class, "delete"]);
+    Route::post("/master-prakitan/store", [MasterPrakitanController::class, "storeAll"]);
+
 
 
     // Logout

@@ -36,9 +36,27 @@ class DetailPembelianController extends Controller
         }
 
         if ($request->ajax()) {
-            $data = $this->detailPembelian->findByNoPembelian($no_pembelian);
 
-            return $this->detailPembelian->getDatatable($data);
+            $details = $this->detailPembelian->findByNoPembelian($no_pembelian)->get();
+
+            $total_keseluruhan = $this->detailPembelian->sum($no_pembelian);
+
+            $jumlahProduk = count($details);
+
+            $dataDetailPembelian = [];
+            foreach($details as $detail) {
+                $dataDetailPembelian[] = [
+                    "no_pembelian" => $detail->no_pembelian,
+                    "kode_produk" => $detail->kode_produk,
+                    "nama_produk" => $detail->produk->nama,
+                    "jenis_produk" => $detail->produk->jenis,
+                    "harga" =>  $detail->harga,
+                    "jumlah" => $detail->jumlah,
+                    "total_harga" => $detail->total_harga,
+                ];
+            }
+
+            return response()->json(["data" => $dataDetailPembelian,"total_keseluruhan" => $total_keseluruhan,"jumlah_jenis_produk" => $jumlahProduk]);
         }
 
         return response()->view("detail_pembelian.detail_pembelian",[

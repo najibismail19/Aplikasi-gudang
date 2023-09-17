@@ -113,7 +113,7 @@
                     </p>
                   </a>
                </li>
-            <li class="nav-header">Log Users</li>
+            <li class="nav-header">Menu</li>
           <li class="nav-item {{ Request::is("users/log-authentication") || Request::is("users/users-activity") ? 'menu-open' : ''}}">
             <a href="#" class="nav-link {{ Request::is("users/log-authentication") || Request::is("users/users-activity") ? 'active' : ''}}">
               <i class="fas fa-users mr-2"></i>
@@ -137,12 +137,11 @@
               </li>
             </ul>
           </li>
-          <li class="nav-header">Product</li>
           <li class="nav-item {{  (request()->is("produk") || request()->is("produk/*")) ? 'menu-open' : ''}}">
             <a href="#" class="nav-link {{ (request()->is("produk") || request()->is("produk/*")) ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
+                <i data-feather="inbox"></i>&nbsp;
               <p>
-                Produk
+                Master Produk
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -155,30 +154,12 @@
               </li>
             </ul>
           </li>
-          <li class="nav-header">Supplier</li>
-          <li class="nav-item {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
-              <p>
-                Supplier
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item ">
-                <a href="{{ url("/supplier") }}" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
-                  <i class="far fa-circle nav-icon mr-2"></i>
-                  <p>Supplier</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-header">Pembelian</li>
+
           <li class="nav-item {{ (request()->is("pembelian") || request()->is("pembelian/*")) ? 'menu-open' : ''}}">
             <a href="#" class="nav-link {{ (request()->is("pembelian") || request()->is("pembelian/*")) ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
+                <i data-feather="archive"></i>&nbsp;
               <p>
-                Pembelian
+                Transaksi
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -189,36 +170,12 @@
                   <p>Pembelian</p>
                 </a>
               </li>
-            </ul>
-          </li>
-          <li class="nav-header">Penerimaan</li>
-          <li class="nav-item {{ Request::is("penerimaan/*") ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ Request::is("penerimaan/*") ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
-              <p>
-                Penerimaan
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
               <li class="nav-item ">
                 <a href="{{ url("/penerimaan") }}" class="nav-link {{ Request::is("penerimaan/*") ? 'active' : ''}}">
                     <i class="far fa-circle nav-icon mr-2"></i>
                     <p>Penerimaan</p>
                 </a>
               </li>
-            </ul>
-          </li>
-          <li class="nav-header">Penjualan</li>
-          <li class="nav-item {{ Request::is("penjualan/*") ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ Request::is("penjualan/*") ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
-              <p>
-                Penjualan
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
               <li class="nav-item ">
                 <a href="{{ url("/penjualan") }}" class="nav-link {{ Request::is("penjualan/*") ? 'active' : ''}}">
                     <i class="far fa-circle nav-icon mr-2"></i>
@@ -227,7 +184,6 @@
               </li>
             </ul>
           </li>
-          <li class="nav-header">Perakitan</li>
           <li class="nav-item {{ Request::is("perakitan/*") ? 'menu-open' : ''}}">
             <a href="#" class="nav-link {{ Request::is("perakitan/*") ? 'active' : ''}}">
               <i class="fas fa-solid fa-sitemap mr-2"></i>
@@ -238,25 +194,24 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item ">
-                <a href="{{ url("/perakitan") }}" class="nav-link {{ Request::is("perakitan/*") ? 'active' : ''}}">
-                  <i class="far fa-circle nav-icon mr-2"></i>
-                  <p>Perakitan</p>
-                </a>
-              </li>
-              <li class="nav-item ">
                 <a href="{{ url("/perakitan/master-prakitan") }}" class="nav-link {{ Request::is("perakitan/master-prakitan/*") ? 'active' : ''}}">
                   <i class="far fa-circle nav-icon mr-2"></i>
                   <p>Master Perakitan</p>
                 </a>
               </li>
+              <li class="nav-item ">
+                <a href="{{ url("/perakitan") }}" class="nav-link {{ Request::is("perakitan/*") ? 'active' : ''}}">
+                  <i class="far fa-circle nav-icon mr-2"></i>
+                  <p>Perakitan</p>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="nav-header">Stock</li>
           <li class="nav-item {{ Request::is("stock/*") ? 'menu-open' : ''}}">
             <a href="#" class="nav-link {{ Request::is("stock/*") ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
+                <i data-feather="check-square"></i>&nbsp;
               <p>
-                Stock
+                Master Stock
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -273,22 +228,27 @@
                     <p>Stock Barang Mentah</p>
                 </a>
               </li>
+              <li class="nav-item ">
+                <a href="{{ url("/kartu-stock") }}" class="nav-link {{ Request::is("kartu-stock/*") ? 'active' : ''}}">
+                    <i class="far fa-circle nav-icon mr-2"></i>
+                    <p>Kartu Stock</p>
+                </a>
+              </li>
             </ul>
           </li>
-          <li class="nav-header">Kartu Stock</li>
-          <li class="nav-item {{ Request::is("kartu-stock/*") ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ Request::is("kartu-stock/*") ? 'active' : ''}}">
-              <i class="fas fa-users mr-2"></i>
+          <li class="nav-item {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'menu-open' : ''}}">
+            <a href="#" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
+                <i data-feather="truck"></i>&nbsp;
               <p>
-                Kartu Stock
+                Supplier
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item ">
-                <a href="{{ url("/kartu-stock") }}" class="nav-link {{ Request::is("kartu-stock/*") ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Kartu Stock</p>
+                <a href="{{ url("/supplier") }}" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
+                  <i class="far fa-circle nav-icon mr-2"></i>
+                  <p>Supplier</p>
                 </a>
               </li>
             </ul>

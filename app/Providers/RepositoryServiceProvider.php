@@ -7,11 +7,13 @@ use App\Repository\DetailPenerimaanRepository;
 use App\Repository\Impl\DetailPembelianRepositoryImpl;
 use App\Repository\Impl\DetailPenerimaanRepositoryImpl;
 use App\Repository\Impl\KartuStokRepositoryImpl;
+use App\Repository\Impl\MasterPrakitanRepositoryImpl;
 use App\Repository\Impl\PembelianRepositoryImpl;
 use App\Repository\Impl\PenerimaanRepositoryImpl;
 use App\Repository\Impl\ProdukRepositoryImpl;
 use App\Repository\Impl\StokRepositoryImpl;
 use App\Repository\KartuStokRepository;
+use App\Repository\MasterPrakitanRepository;
 use App\Repository\PembelianRepository;
 use App\Repository\PenerimaanRepository;
 use App\Repository\ProdukRepository;
@@ -29,6 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         DetailPenerimaanRepository::class => DetailPenerimaanRepositoryImpl::class,
         StokRepository::class => StokRepositoryImpl::class,
         KartuStokRepository::class => KartuStokRepositoryImpl::class,
+        MasterPrakitanRepository::class => MasterPrakitanRepositoryImpl::class
     ];
     /**
      * Register services.
@@ -55,7 +58,8 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             PenerimaanRepository::class,
             DetailPenerimaanRepository::class,
             StokRepository::class,
-            KartuStokRepository::class
+            KartuStokRepository::class,
+            MasterPrakitanRepository::class
         ];
     }
 }
