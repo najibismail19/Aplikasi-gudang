@@ -4,18 +4,22 @@ namespace App\Providers;
 
 use App\Repository\DetailPembelianRepository;
 use App\Repository\DetailPenerimaanRepository;
+use App\Repository\DetailPrakitanRepository;
 use App\Repository\Impl\DetailPembelianRepositoryImpl;
 use App\Repository\Impl\DetailPenerimaanRepositoryImpl;
+use App\Repository\Impl\DetailPrakitanRepositoryImpl;
 use App\Repository\Impl\KartuStokRepositoryImpl;
 use App\Repository\Impl\MasterPrakitanRepositoryImpl;
 use App\Repository\Impl\PembelianRepositoryImpl;
 use App\Repository\Impl\PenerimaanRepositoryImpl;
+use App\Repository\Impl\PrakitanRepositoryImpl;
 use App\Repository\Impl\ProdukRepositoryImpl;
 use App\Repository\Impl\StokRepositoryImpl;
 use App\Repository\KartuStokRepository;
 use App\Repository\MasterPrakitanRepository;
 use App\Repository\PembelianRepository;
 use App\Repository\PenerimaanRepository;
+use App\Repository\PrakitanRepository;
 use App\Repository\ProdukRepository;
 use App\Repository\StokRepository;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -31,7 +35,9 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         DetailPenerimaanRepository::class => DetailPenerimaanRepositoryImpl::class,
         StokRepository::class => StokRepositoryImpl::class,
         KartuStokRepository::class => KartuStokRepositoryImpl::class,
-        MasterPrakitanRepository::class => MasterPrakitanRepositoryImpl::class
+        MasterPrakitanRepository::class => MasterPrakitanRepositoryImpl::class,
+        PrakitanRepository::class => PrakitanRepositoryImpl::class,
+        DetailPrakitanRepository::class => DetailPrakitanRepositoryImpl::class
     ];
     /**
      * Register services.
@@ -59,7 +65,9 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             DetailPenerimaanRepository::class,
             StokRepository::class,
             KartuStokRepository::class,
-            MasterPrakitanRepository::class
+            MasterPrakitanRepository::class,
+            PrakitanRepository::class,
+            DetailPrakitanRepository::class
         ];
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Repository\Impl;
 
 use App\Models\MasterPrakitan;
+use App\Models\Produk;
 use App\Repository\MasterPrakitanRepository;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\DataTables;
@@ -10,18 +11,25 @@ class MasterPrakitanRepositoryImpl implements MasterPrakitanRepository{
     public function getDatatable(): JsonResponse
     {
 
-        $data = MasterPrakitan::join('produk', 'produk.kode_produk', '=', 'master_prakitan.kode_produk_jadi')
-                        ->where('produk.jenis', 1)
-                        ->where('master_prakitan.is_active', 1)
-                        ->get(['master_prakitan.*', 'produk.*']);
+        $groupProduk = MasterPrakitan::select("kode_produk_jadi")->groupBy("kode_produk_jadi")->get();
+        $kode_produk = [];
+        foreach($groupProduk as $produk) {
+            array_push($kode_produk, $produk->kode_produk_jadi);
+        }
+
+        $data = Produk::select("*")->whereIn("kode_produk", $kode_produk)->get();
         return DataTables::of($data)
             ->addIndexColumn()
-            ->editColumn('jenis_produk', function (MasterPrakitan $masterPrakitan) {
-                return ($masterPrakitan->produk_jadi->jenis == 1) ? "Barang Jadi" : "Barang Mentah";
+            ->editColumn('jenis_produk', function (Produk $produk) {
+                return ($produk->jenis == 1) ? "Barang Jadi" : "Barang Mentah";
             })
-            ->addColumn('action', function($masterPrakitan){
+            ->addColumn('action', function($produk){
 
-                $btn = "<a class='btn btn-secondary mx-1' id='$masterPrakitan->kode_produk_jadi'><i class='align-middle' data-feather='eye'></i></a>";
+                $btn = "<a class='btn btn-secondary mx-1' id='$produk->kode_produk'><i class='align-middle' data-feather='eye'></i></a>";
+
+                if(request()->hasHeader("X-SRC-MTR-Prakitan")){
+                    return "<a class='btn btn-primary mx-1' id='pilihMasterPrakitan' data-kode_produk='$produk->kode_produk' data-nama_produk='$produk->nama'><i class='align-middle' data-feather='check'></i></a>";
+                };
 
                 return $btn;
             })
@@ -34,6 +42,14 @@ class MasterPrakitanRepositoryImpl implements MasterPrakitanRepository{
         return MasterPrakitan::select("*")->with(["produk_jadi", "produk_mentah"])
                                           ->where("kode_produk_jadi", $kode_produk_jadi)
                                           ->where("is_active", false)
+                                          ->get();
+    }
+
+    public function getDetailMasterIsActive($kode_produk_jadi)
+    {
+        return MasterPrakitan::select("*")->with(["produk_jadi", "produk_mentah"])
+                                          ->where("kode_produk_jadi", $kode_produk_jadi)
+                                          ->where("is_active", true)
                                           ->get();
     }
 

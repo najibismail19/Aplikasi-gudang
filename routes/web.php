@@ -3,10 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailPembelianController;
+use App\Http\Controllers\DetailPrakitanController;
 use App\Http\Controllers\KartuStokController;
 use App\Http\Controllers\MasterPrakitanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenerimaanController;
+use App\Http\Controllers\PrakitanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
@@ -104,6 +106,16 @@ Route::group(["middleware" => "auth:karyawan"], function () {
     Route::post("/master-prakitan/detail-master-prakitan/update", [MasterPrakitanController::class, "update"]);
     Route::delete("/master-prakitan/{kode_produk_jadi}/produk/{kode_produk_mentah}", [MasterPrakitanController::class, "delete"]);
     Route::post("/master-prakitan/store", [MasterPrakitanController::class, "storeAll"]);
+
+    // Prakitan
+    Route::get("/prakitan", [PrakitanController::class, "index"]);
+    Route::post("/prakitan", [PrakitanController::class, "store"]);
+    Route::get("/prakitan/tambah-prakitan", [PrakitanController::class, "tambahPrakitan"]);
+    Route::get("/prakitan/get-master-prakitan", [PrakitanController::class, "getMasterPrakitan"]);
+    Route::get("/prakitan/get-detail-master-prakitan/{kode_produk}", [PrakitanController::class, "getDataDetailMasterPrakitan"]);
+
+
+    Route::get("/prakitan/{no_prakitan}", [DetailPrakitanController::class, "index"]);
 
 
 

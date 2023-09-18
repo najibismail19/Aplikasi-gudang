@@ -39,7 +39,14 @@ class DupplicateMasterPrakitan implements ValidationRule, DataAwareRule, Validat
         $query = MasterPrakitan::where("kode_produk_jadi", $kode_produk_jadi)
                         ->where("kode_produk_mentah", $kode_produk_mentah)
                         ->first();
-        if($query) {
+
+        $cekIsActive = MasterPrakitan::select("*")->with(["produk_jadi", "produk_mentah"])
+                        ->where("kode_produk_jadi", $kode_produk_jadi)
+                        ->where("is_active", true)
+                        ->get();
+        if (count($cekIsActive) > 0) {
+            $fail("Produk Sudah Pernah Dirakit");
+        } else if($query) {
             $fail("Produk Sudah Tersedia");
         }
     }

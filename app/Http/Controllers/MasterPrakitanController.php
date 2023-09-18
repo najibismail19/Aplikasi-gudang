@@ -52,13 +52,10 @@ class MasterPrakitanController extends Controller
     public function getDetailMasterPerakitan(Request $request, $kode_produk_jadi) : JsonResponse
     {
         if($request->ajax()) {
-            $detail_master = $this->masterPrakitan->getDetailMaster($kode_produk_jadi);
+            $detail_master = $this->masterPrakitan->getDetailMaster($kode_produk_jadi)->get();
             $data = [];
-            foreach ($detail_master as $detail) {
-                if($detail->is_active == true) {
-                    return response()->json( array('error' => "Produk Sudah Pernah dirakit"));
-                }
 
+            foreach ($detail_master as $detail) {
                 $data[] = [
                     "kode_produk" => $detail->kode_produk_mentah,
                     "kode_produk_jadi" => $detail->kode_produk_jadi,

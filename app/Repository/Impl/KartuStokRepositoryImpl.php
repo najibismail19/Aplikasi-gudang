@@ -40,6 +40,15 @@ Class KartuStokRepositoryImpl implements KartuStokRepository {
                         ->first();
     }
 
+    public function findByGudangProduk($id_gudang, $kode_produk)
+    {
+        return KartuStok::select("*")
+                        ->where("id_gudang", $id_gudang)
+                        ->where("kode_produk", $kode_produk)
+                        ->orderBy('tanggal', 'desc')
+                        ->first();
+    }
+
     public function insert(array $array)
     {
         KartuStok::insert($array);

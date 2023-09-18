@@ -8,6 +8,8 @@ interface MasterPrakitanRepository {
 
     public function getDetailMaster($kode_produk_jadi);
 
+    public function getDetailMasterIsActive($kode_produk_jadi);
+
     public function insert(array $array);
 
     public function update($kode_produk_jadi, $kode_produk_mentah, array $array);

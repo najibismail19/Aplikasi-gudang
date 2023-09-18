@@ -34,6 +34,14 @@ Class StokRepositoryImpl implements StokRepository {
                     ->first();
     }
 
+    public function findByGudangProduk($id_gudang, $kode_produk)
+    {
+        return Stok::select("*")
+                    ->where("id_gudang", $id_gudang)
+                    ->where("kode_produk", $kode_produk)
+                    ->first();
+    }
+
     public function insert(array $array)
     {
         Stok::insert($array);

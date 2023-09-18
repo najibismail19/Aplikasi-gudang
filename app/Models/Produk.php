@@ -40,6 +40,12 @@ class Produk extends Model
        ->using(DetailPembelian::class);;
     }
 
+    public function detailPrakitan() : BelongsToMany
+    {
+       return $this->belongsToMany(Prakitan::class, "detail_prakitan", "kode_produk", "no_prakitan")
+       ->using(DetailPrakitan::class);;
+    }
+
     public function masterPrakitanProdukMentah() : HasMany
     {
         return $this->hasMany(MasterPrakitan::class, "kode_produk_mentah", "kode_produk");
