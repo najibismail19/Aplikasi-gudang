@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
@@ -16,4 +17,10 @@ class Supplier extends Model
     public $timestamps = false;
 
     protected $guarded = [];
+
+
+    public function pembelian() : HasMany
+    {
+        return $this->hasMany(Pembelian::class, "id_supplier", "id_supplier");
+    }
 }

@@ -184,8 +184,13 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ Request::is("perakitan/*") ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ Request::is("perakitan/*") ? 'active' : ''}}">
+          @if (Request::is("prakitan/*") || Request::is("prakitan") || Request::is("master-prakitan/*") || Request::is("master-prakitan"))
+              <li class="nav-item menu-open">
+              <a href="#" class="nav-link active">
+          @else
+            <li class="nav-item">
+            <a href="#" class="nav-link">
+          @endif
               <i class="fas fa-solid fa-sitemap mr-2"></i>
               <p>
                 Perakitan
@@ -194,21 +199,21 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item ">
-                <a href="{{ url("/perakitan/master-prakitan") }}" class="nav-link {{ Request::is("perakitan/master-prakitan/*") ? 'active' : ''}}">
+                <a href="{{ url("master-prakitan") }}" class="nav-link {{ (Request::is("master-prakitan/*") || Request::is("master-prakitan")) ? 'active' : ''}}">
                   <i class="far fa-circle nav-icon mr-2"></i>
                   <p>Master Perakitan</p>
                 </a>
               </li>
               <li class="nav-item ">
-                <a href="{{ url("/perakitan") }}" class="nav-link {{ Request::is("perakitan/*") ? 'active' : ''}}">
+                <a href="{{ url("/prakitan") }}" class="nav-link {{ (Request::is("prakitan/*") || Request::is("prakitan")) ? 'active' : ''}}">
                   <i class="far fa-circle nav-icon mr-2"></i>
                   <p>Perakitan</p>
                 </a>
               </li>
             </ul>
           </li>
-          <li class="nav-item {{ Request::is("stock/*") ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ Request::is("stock/*") ? 'active' : ''}}">
+          <li class="nav-item {{ Request::is("stok/*") ? 'menu-open' : ''}}">
+            <a href="#" class="nav-link {{ Request::is("stok/*") ? 'active' : ''}}">
                 <i data-feather="check-square"></i>&nbsp;
               <p>
                 Master Stock
@@ -217,19 +222,19 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item ">
-                <a href="{{ url("/stock/barang-jadi") }}" class="nav-link {{ Request::is("stock/barang-jadi/*") ? 'active' : ''}}">
+                <a href="{{ url("/stok/barang-jadi") }}" class="nav-link {{ Request::is("stok/barang-jadi/*") ? 'active' : ''}}">
                     <i class="far fa-circle nav-icon mr-2"></i>
                     <p>Stcok Barang Jadi</p>
                 </a>
               </li>
               <li class="nav-item ">
-                <a href="{{ url("/stock/barang-mentah") }}" class="nav-link {{ Request::is("stock/barang-mentah/*") ? 'active' : ''}}">
+                <a href="{{ url("/stok/barang-mentah") }}" class="nav-link {{ Request::is("stok/barang-mentah/*") ? 'active' : ''}}">
                     <i class="far fa-circle nav-icon mr-2"></i>
                     <p>Stock Barang Mentah</p>
                 </a>
               </li>
               <li class="nav-item ">
-                <a href="{{ url("/kartu-stock") }}" class="nav-link {{ Request::is("kartu-stock/*") ? 'active' : ''}}">
+                <a href="{{ url("/kartu-stok") }}" class="nav-link {{ Request::is("kartu-stok/*") ? 'active' : ''}}">
                     <i class="far fa-circle nav-icon mr-2"></i>
                     <p>Kartu Stock</p>
                 </a>

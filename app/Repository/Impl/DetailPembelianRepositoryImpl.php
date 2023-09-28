@@ -64,4 +64,6 @@ Class DetailPembelianRepositoryImpl implements DetailPembelianRepository {
             return (float) str_replace(',', '', $detail->total_harga);
         });
     }
+
+
 }

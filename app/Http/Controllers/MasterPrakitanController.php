@@ -52,7 +52,7 @@ class MasterPrakitanController extends Controller
     public function getDetailMasterPerakitan(Request $request, $kode_produk_jadi) : JsonResponse
     {
         if($request->ajax()) {
-            $detail_master = $this->masterPrakitan->getDetailMaster($kode_produk_jadi)->get();
+            $detail_master = $this->masterPrakitan->getDetailMaster($kode_produk_jadi);
             $data = [];
 
             foreach ($detail_master as $detail) {
@@ -72,21 +72,25 @@ class MasterPrakitanController extends Controller
     {
         if($request->ajax()) {
             try {
-                $request->validate([
-                    "kode_produk_mentah" => new DupplicateMasterPrakitan()
+                $data = $request->validate([
+                    "kode_produk_jadi" => ["required"],
+                    "kode_produk_mentah" => ["required", new DupplicateMasterPrakitan()],
+                    "quantity" => ["required", "numeric", "min:0", "not_in:0"]
                 ]);
 
                 $this->masterPrakitan->insert([
-                    "kode_produk_jadi" => $request->input("kode_produk_jadi"),
-                    "kode_produk_mentah" => $request->input("kode_produk_mentah"),
-                    "quantity" => $request->input("quantity"),
+                    "kode_produk_jadi" => $data["kode_produk_jadi"],
+                    "kode_produk_mentah" => $data["kode_produk_mentah"],
+                    "quantity" => $data["quantity"],
                 ]);
 
                 return response()->json( array('success' => "Data Master Perakitan Berhasil Ditambahkan"));
 
             } catch( ValidationException $exception) {
-                $response = $exception->validator->errors()->toArray();
-                return response()->json(["error" => $response["kode_produk_mentah"]]);
+
+                $errors = $exception->validator->errors()->toArray();
+
+                return response()->json(["errors" => $errors]);
             }
 
         }
@@ -95,17 +99,25 @@ class MasterPrakitanController extends Controller
     public function update(Request $request) : JsonResponse
     {
         if($request->ajax()) {
-                $kode_produk_jadi = $request->input("kode_produk_jadi");
+            try {
+                $data = $request->validate([
+                    "kode_produk_jadi" => ["required"],
+                    "kode_produk_mentah" => ["required"],
+                    "quantity" => ["required", "numeric", "min:0", "not_in:0"]
+                ]);
 
-                $kode_produk_mentah = $request->input("kode_produk_mentah");
-
-                $quantity = $request->input("quantity");
-
-                $this->masterPrakitan->update($kode_produk_jadi, $kode_produk_mentah, [
-                    "quantity" => $request->input("quantity"),
+                $this->masterPrakitan->update($data["kode_produk_jadi"], $data["kode_produk_mentah"], [
+                    "quantity" => $data["quantity"],
                 ]);
 
                 return response()->json( array('success' => "Data Master Perakitan Berhasil Diupdate"));
+
+            } catch( ValidationException $exception) {
+
+                $errors = $exception->validator->errors()->toArray();
+
+                return response()->json(["errors" => $errors]);
+            }
         }
     }
 
@@ -128,6 +140,20 @@ class MasterPrakitanController extends Controller
             $produkAll = $this->masterPrakitan->updateManyIsActive($kode_produk_jadi);
 
             return response()->json(array("success" => "Master Prakitan Behasil ditambahkan"));
+        }
+    }
+
+    public function cekProduk($kode_produk, Request $request)
+    {
+        if($request->ajax()){
+
+            $data = $this->masterPrakitan->getDetailMasterIsActive($kode_produk);
+
+            if(count($data) > 0) {
+                return response()->json(["error" => "Produk sudah pernah dirakit"]);
+            }
+
+            return response()->json(["success" => true]);
         }
     }
 }

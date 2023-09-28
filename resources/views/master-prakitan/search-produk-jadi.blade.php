@@ -80,27 +80,55 @@
     });
 
     $(document).on("click", "#searchProduk", function () {
-        alert("sdas")
         $("#modalProdukPrakitan").modal("show");
     });
 
 
     $(document).on("click", ".pilihProduk", function () {
-        let kode_produk = $(this).attr("data-kode-produk");
-        let nama = $(this).attr("data-nama");
-        let harga = $(this).attr("data-harga");
-        let jenis = $(this).attr("data-jenis");
-        let satuan = $(this).attr("data-satuan");
+        $.ajax({
+            headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
+            url : "/master-prakitan/cek-produk/" + $(this).attr("data-kode-produk"),
+            type : "GET",
+            dataType : "json",
+            success: response => {
+                if(response.success) {
+                    let kode_produk = $(this).attr("data-kode-produk");
+                    let nama = $(this).attr("data-nama");
+                    let harga = $(this).attr("data-harga");
+                    let jenis = $(this).attr("data-jenis");
+                    let satuan = $(this).attr("data-satuan");
 
-        $("#kode_produk_jadi").val(kode_produk);
-        $("#nama_produk_jadi").val(nama);
-        $("#satuan_produk_jadi").val(satuan);
+                    $("#kode_produk_jadi").val(kode_produk);
+                    $("#nama_produk_jadi").val(nama);
+                    $("#satuan_produk_jadi").val(satuan);
 
-        let nama_jenis = (jenis == 0) ? "Barang Mentah" : "Barang Jadi";
-        $("#jenis_produk_jadi").val(nama_jenis);
+                    let nama_jenis = (jenis == 0) ? "Barang Mentah" : "Barang Jadi";
+                    $("#jenis_produk_jadi").val(nama_jenis);
 
+                    $("#modalProdukPrakitan").modal("hide");
 
-        // $("#gambar_produk").attr("src", "/storage/photos/produk/" + file_gambar);
-        $("#modalProdukPrakitan").modal("hide");
+                    getDataDetailPrakitan();
+                }
+                if(response.error) {
+                    $("#modalProdukPrakitan").modal("hide");
+
+                    setTimeout(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'error',
+                            text:  response.error
+                        });
+
+                        $("#data-detail-prakitan tr").remove();
+
+                        return false;
+                    }, 1000);
+                }
+            },
+            error: function(xhr,textStatus,thrownError) {
+            alert(xhr + "\n" + textStatus + "\n" + thrownError);
+            }
+        });
+
     });
 </script>

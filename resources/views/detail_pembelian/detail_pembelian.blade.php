@@ -28,15 +28,16 @@
                     </div>
                     <div class="row justify-content-between bg-light" style="margin-top: 2rem; padding-top: 2rem;">
                         <div class="col-md-3">
-                            <div class="row justify-content-center">
-                                <h2 style="margin-bottom: -.5rem;">Tambah Pembelian</h2>
-                                <div class="row g-3 d-flex mb-3 justify-content-between">
-                                    <label for="kode_produk" class="form-label" style="margin-bottom: -.5rem;">Kode Produk</label>
-                                    <div class="col-md-6">
-                                      <input type="text" id="kode_produk" class="form-control" placeholder="Kode Produk" readonly>
-                                    </div>
-                                    <button class="btn btn-success col-md-6" id="searchProduk"><i data-feather="plus"></i>&nbsp;Cari Produk</button>
-                                  </div>
+                            <div class="row justify-content-center data_produk">
+                                <h2 >Tambah Pembelian</h2>
+                                <div class="mb-3 row">
+                                    <button class="btn btn-success col-md-6" id="searchProduk" style="width: 100%"><i data-feather="plus"></i>&nbsp;Cari Produk</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nama_Produk" class="form-label">Kode Produk</label>
+                                    <input type="text" id="kode_produk" class="form-control" placeholder="Kode Produk" readonly>
+                                    <small class="text-danger error_text kode_produk_error"></small>
+                                </div>
                                 <div class="mb-3">
                                     <label for="nama_Produk" class="form-label">Produk</label>
                                     <input type="text" class="form-control" id="nama_produk" placeholder="Nama Produk" readonly>
@@ -48,19 +49,22 @@
                                   <div class="mb-3">
                                     <label for="harga" class="form-label">Harga</label>
                                     <input type="number" class="form-control" id="harga" placeholder="Harga" readonly>
+                                    <small class="text-danger error_text harga_error"></small>
                                   </div>
                                   <div class="mb-3">
                                     <label for="jumlah" class="form-label">Jumlah</label>
                                     <input type="number" class="form-control" id="jumlah" value="0">
+                                    <small class="text-danger error_text jumlah_error"></small>
                                   </div>
                                   <div class="mb-3">
                                     <label for="total_harga" class="form-label">Total Harga</label>
                                     <input type="text" class="form-control" id="total_harga" placeholder="Total Harga" readonly>
+                                    <small class="text-danger error_text total_harga_error"></small>
                                   </div>
                                   <div class="row" id="btn-action-produk">
-                                      <button class="btn btn-secondary col-md-5 mr-1" id="reset"><i data-feather="refresh-ccw"></i>&nbsp;Reset</button>
-                                      <button class="btn btn-primary col-md-5" id="tambah"><i data-feather="plus"></i>&nbsp;Tambah</button>
-                                      <button class="btn btn-primary col-md-5" id="ubah"><i data-feather="plus"></i>&nbsp;Ubah</button>
+                                      <button class="btn btn-secondary col-md-5 m-2" id="reset"><i data-feather="refresh-ccw"></i>&nbsp;Reset</button>
+                                      <button class="btn btn-primary col-md-5 m-2" id="tambah"><i data-feather="plus"></i>&nbsp;Tambah</button>
+                                      <button class="btn btn-primary col-md-5 m-2" id="ubah"><i data-feather="plus"></i>&nbsp;Ubah</button>
                                   </div>
                             </div>
                         </div>
@@ -185,26 +189,10 @@
         let jumlah = $("#jumlah").val();
         let total_harga = $("total_harga").val();
         let harga = $("#harga").val();
-        if($.trim(kode_produk) == "") {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Kode Produk Tidak Boleh Kosong"
-            });
-            return false;
-        } else if($.trim(jumlah) == "" || $.trim(jumlah) == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Jumlah Produk Tidak Boleh Kosong"
-            })
-            $("#jumlah").addClass("is-invalid");
-            $(".jumlah-in-valid").html("please input the quantity");
-            return false;
-        } else {
+
         $.ajax({
                 headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-                url : "/pembelian/produk",
+                url : "/pembelian/produk/create",
                 type : "POST",
                 data : {
                     no_pembelian : $("#no_pembelian").val(),
@@ -215,6 +203,14 @@
                 },
                 dataType : "json",
                 success: response => {
+                        if(response.errors) {
+                            let form_produk = $(".data_produk");
+                                $.each(response.errors, function (prefix, val) {
+                                        $(form_produk).find("#" + prefix + "").addClass("is-invalid");
+                                        $(form_produk).find("small." + prefix + "_error").text(val[0]);
+                                })
+                        }
+
                         if(response["success"]) {
 
                             Swal.fire({
@@ -226,33 +222,9 @@
                             getDataDetailPembelian();
                         }
 
-                        if(response["error"]) {
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'error',
-                                text:  response["error"]
-
-                            })
-
-                            getDataDetailPembelian();
-                        }
                 }, error: function(data){
-
-                var errors = data.responseJSON;
-                console.log(errors);
-
-                 errorsHtml = '<div class="alert alert-danger"><ul>';
-
-                 $.each( errors.error, function( key, value ) {
-                      errorsHtml += '<li>'+ value[0] + '</li>';
-                 });
-                 errorsHtml += '</ul></div>';
-
-                 $( '#form-errors' ).html( errorsHtml );
-            }
+                }
             });
-        }
     });
 
     $(document).on("click", "#edit", function () {
@@ -273,15 +245,11 @@
         $("#jenis_produk").val(input_jenis);
         $("#nama_produk").val(nama_produk);
 
-        // $("#btn-produk").addClass("d-flex justify-content-center");
-        // $("#btn-produk  button").addClass("col-md-5 mx-1");
         $("#tambah").hide();
         $("#ubah").show();
         $("#searchProduk").hide();
         $(".search-produk").hide();
 
-        // let file_gambar = ($.trim(gambar) != "") ? gambar : "default.png";
-        // $("#gambar_produk").attr("src", "/storage/photos/produk/" + file_gambar);
     });
 
     $(document).on("click", "#reset", function (e) {
@@ -295,23 +263,7 @@
         let jumlah = $("#jumlah").val();
         let total_harga = $("#total_harga").val();
         let harga = $("#harga").val();
-        if($.trim(kode_produk) == "") {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Kode Produk Tidak Boleh Kosong!"
-            })
-            return false;
-        } else if($.trim(jumlah) == "" || $.trim(jumlah) == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Jumlah tidak boleh kosong!"
-            })
-            $("#jumlah").addClass("is-invalid");
-            $(".jumlah-in-valid").html("please input the quantity");
-            return false;
-        } else{
+
             $.ajax({
                 headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
                 url : "/pembelian/detail-pembelian/update",
@@ -325,6 +277,13 @@
                 },
                 dataType : "json",
                 success: response => {
+                    if(response.errors) {
+                            let form_produk = $(".data_produk");
+                                $.each(response.errors, function (prefix, val) {
+                                        $(form_produk).find("#" + prefix + "").addClass("is-invalid");
+                                        $(form_produk).find("small." + prefix + "_error").text(val[0]);
+                                })
+                        }
 
                         if(response["success"]) {
                             Swal.fire({
@@ -335,22 +294,11 @@
                             getDataDetailPembelian();
                             refreshUI();
                         }
-
-                        if(response["error"]) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'error',
-                                text:  response["error"]
-                            });
-                            getDataDetailPembelian();
-                            refreshUI();
-                        }
                 },
                 error: function(xhr,textStatus,thrownError) {
                 alert(xhr + "\n" + textStatus + "\n" + thrownError);
                 }
             });
-        }
     });
 
     $(document).on('click', '#delete', function() {
@@ -450,11 +398,9 @@
         $("#tambah").show();
         $("#ubah").hide();
         $("#searchProduk").show();
-        // $("#image_item").attr("src", "/storage/photos/produk/default.png");
+        $(".data_produk input").removeClass("is-invalid");
+        $(".data_produk small").html("");
     }
 
-//     $(document).on("click", "#cancel", function () {
-//         refreshUI();
-//     });
 </script>
 @endpush

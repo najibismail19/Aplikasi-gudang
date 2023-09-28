@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gudang;
 use App\Repository\KartuStokRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,6 +23,8 @@ class KartuStokController extends Controller
         {
             return $this->kartuStok->getDatatable();
         }
-        return response()->view("kartu-stok.kartu-stok");
+        return response()->view("kartu-stok.kartu-stok",[
+            "gudang" => Gudang::all()
+        ]);
     }
 }

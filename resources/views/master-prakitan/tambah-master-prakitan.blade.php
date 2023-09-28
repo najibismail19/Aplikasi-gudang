@@ -8,49 +8,41 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="row inputProdukJadi">
+                    <div class="row" id="inputProdukJadi">
                         <div class="col-md-3">
                             <label for="kode_produk_jadi" class="form-label">Kode Produk Jadi*</label>
                             <input type="text" class="form-control" id="kode_produk_jadi" placeholder="Kode Produk Jadi..." readonly>
+                            <small class="text-danger error_text kode_produk_jadi_error"></small>
                         </div>
                         <div class="col-md-3">
                             <label for="nama_produk_jadi" class="form-label">Nama Produk Jadi*</label>
                             <input type="text" class="form-control" id="nama_produk_jadi" readonly placeholder="Nama Produk Jadi...">
+                            <small class="text-danger error_text kode_produk_jadi_error"></small>
                         </div>
                         <div class="col-md-3">
                             <label for="jenis_produk_jadi" class="form-label">Jenis Produk</label>
                             <input type="text" class="form-control" id="jenis_produk_jadi" placeholder="Jenis Produk..." readonly>
+                            <small class="text-danger error_text kode_produk_jadi_error"></small>
                         </div>
                         <div class="col-md-3">
                             <label for="satuan_produk_jadi" class="form-label">Satuan</label>
-                            <div class="d-flex">
-                                <input type="text" class="form-control"  placeholder="Cari Produk..." id="satuan_produk_jadi" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3 contentSearchProdukJadi">
-                        <div class="col-md-6">
-                            <label for="exampleInputEmail1" class="form-label">Cari Produk...</label>
-                            <div class="d-flex">
-                                <input type="text" class="form-control"  placeholder="Cari Produk..." id="input_search_pembelian" readonly>
-                                <button class="btn btn-danger" style="width : 20%;" id="searchProduk"><i data-feather="search"></i>&nbsp;</button>
-                            </div>
-                        </div>
-                        <div class="col-md-2" style="margin-top: 1.8rem;">
-                            <button class="btn btn-success mt-1 px-5" id="saveProdukJadi"><i data-feather="plus"></i>&nbsp;Save</button>
+                            <input type="text" class="form-control"  placeholder="Cari Produk..." id="satuan_produk_jadi" readonly>
+                            <small class="text-danger error_text kode_produk_jadi_error"></small>
                         </div>
                     </div>
                     <div class="row justify-content-between bg-light data-detail-prakitan" style="margin-top: 2rem; padding-top: 2rem;">
+
                         <div class="col-md-3">
-                            <div class="row justify-content-center inputProdukMentah">
-                                <h2 style="margin-bottom: -.5rem;">Tambah Produk</h2>
-                                <div class="row g-3 d-flex mb-3 justify-content-between">
-                                    <label for="kode_produk_mentah" class="form-label" style="margin-bottom: -.5rem;">Kode Produk Mentah</label>
-                                    <div class="col-md-6">
-                                      <input type="text" id="kode_produk_mentah" class="form-control" placeholder="Kode Produk" readonly>
-                                    </div>
-                                    <button class="btn btn-success col-md-6" id="searchProdukMentah"><i data-feather="search"></i>&nbsp;Cari Produk</button>
-                                  </div>
+                            <div class="row justify-content-center inputProdukMentah data_produk">
+                                <h2>Tambah Produk</h2>
+                                <div class="mb-3 row">
+                                    <button class="btn btn-success col-md-6" id="searchProdukMentah" style="width: 100%"><i data-feather="plus"></i>&nbsp;Cari Produk</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nama_Produk" class="form-label">Kode Produk Mentah</label>
+                                    <input type="text" id="kode_produk_mentah" class="form-control" placeholder="Kode Produk" readonly>
+                                    <small class="text-danger error_text kode_produk_mentah_error"></small>
+                                </div>
                                 <div class="mb-3">
                                     <label for="nama_Produk" class="form-label">Produk</label>
                                     <input type="text" class="form-control" id="nama_produk_mentah" placeholder="Nama Produk" readonly>
@@ -64,18 +56,30 @@
                                     <input type="text" class="form-control" id="satuan" placeholder="Satuan Produk" readonly>
                                   </div>
                                   <div class="mb-3">
-                                    <label for="jumlah" class="form-label">Jumlah</label>
-                                    <input type="number" class="form-control" id="jumlah_produk_mentah" value="0">
+                                    <label for="quantity" class="form-label">Qty</label>
+                                    <input type="number" class="form-control" id="quantity" value="0">
+                                    <small class="text-danger error_text quantity_error"></small>
                                   </div>
                                   <div class="row" id="btn-action-produk">
-                                      <button class="btn btn-secondary col-md-5 mr-1" id="reset"><i data-feather="refresh-ccw"></i>&nbsp;Reset</button>
-                                      <button class="btn btn-primary col-md-5" id="tambah-master-prakitan"><i data-feather="plus"></i>&nbsp;Tambah</button>
-                                      <button class="btn btn-primary col-md-5" id="ubah-master-prakitan"><i data-feather="plus"></i>&nbsp;Ubah</button>
+                                      <button class="btn btn-secondary col-md-5 m-2" id="reset"><i data-feather="refresh-ccw"></i>&nbsp;Reset</button>
+                                      <button class="btn btn-primary col-md-5 m-2" id="tambah-master-prakitan"><i data-feather="plus"></i>&nbsp;Tambah</button>
+                                      <button class="btn btn-primary col-md-5 m-2" id="ubah-master-prakitan"><i data-feather="plus"></i>&nbsp;Ubah</button>
                                   </div>
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <h2 style="margin-bottom: 2rem;">Detail Perakitan</h2>
+                            <div class="row my-1 justify-content-end contentSearchProdukJadi">
+                                <div class="col-md-7">
+                                    <h2>Detail Perakitan</h2>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="exampleInputEmail1" class="form-label">Cari Produk...</label>
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control"  placeholder="Cari Produk..." id="input_search_pembelian" readonly>
+                                        <button class="btn btn-danger" style="width : 20%;" id="searchProduk"><i data-feather="search"></i>&nbsp;</button>
+                                    </div>
+                                </div>
+                            </div>
                             <table class="table table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
                                   <tr>
@@ -118,7 +122,7 @@
       feather.replace();
         $(function () {
             $("#btn-action-produk").find("#ubah-master-prakitan").hide();
-            $(".data-detail-prakitan").hide();
+            // $(".data-detail-prakitan").hide();
 
             $.ajax({
                   headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
@@ -155,35 +159,6 @@
             $("#modalProdukPrakitan").modal("show");
         });
 
-
-        $(document).on("click","#saveProdukJadi", function () {
-           let kode_produk_jadi = $("#kode_produk_jadi").val();
-           if($.trim(kode_produk_jadi) == "")
-           {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Kode Produk Jadi Wajib Di Isi"
-            })
-
-            $(".inputProdukJadi").find("input").addClass("is-invalid");
-            return false;
-           } else {
-                $(".inputProdukJadi").find("input").removeClass("is-invalid");
-                $(".contentSearchProdukJadi").hide();
-                Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Produk Berhasil Ditambahkan',
-                        showConfirmButton: false,
-                        timer: 1500
-                })
-                $(".data-detail-prakitan").show();
-                getDataDetailPrakitan();
-           }
-         });
-
-
          function getDataDetailPrakitan() {
             let kode_produk_jadi = $("#kode_produk_jadi").val();
             $.ajax({
@@ -218,28 +193,8 @@
          $(document).on("click", "#tambah-master-prakitan", function () {
             let kode_produk_jadi = $("#kode_produk_jadi").val();
             let kode_produk_mentah = $("#kode_produk_mentah").val();
-            let quantity = $("#jumlah_produk_mentah").val();
+            let quantity = $("#quantity").val();
 
-            if($.trim(kode_produk_mentah) == "")
-           {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Kode Produk Jadi Wajib Di Isi"
-            })
-
-            $(".inputProdukMentah").find("input").addClass("is-invalid");
-            return false;
-           } else  if($.trim(quantity) == "" || $.trim(quantity) == 0){
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Masukkan Jumlah Produk!"
-            })
-
-            $("#jumlah_produk_mentah").addClass("is-invalid");
-            return false;
-            } else {
                 $.ajax({
                   headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
                   url : "/master-prakitan/detail-master-prakitan/store",
@@ -251,29 +206,35 @@
                   },
                   dataType : "json",
                   success: response => {
-                      console.log(response);
-                      if(response.success) {
-                        Swal.fire({
-                                icon: 'success',
-                                title: 'success',
-                                text:  response.success
+                    if(response.errors) {
+                            let form_produk = $(".data_produk");
+                                $.each(response.errors, function (prefix, val) {
+                                    if(prefix == "kode_produk_jadi") {
+                                    $("#inputProdukJadi").find("input").addClass("is-invalid");
+                                    $("#inputProdukJadi").find("small").text("Kode Produk Jadi Is Required");
+                                }
+                                $(form_produk).find("#" + prefix + "").addClass("is-invalid");
+                                $(form_produk).find("small." + prefix + "_error").text(val[0]);
                             })
-                        getDataDetailPrakitan();
-                      }
+                    }
 
-                      if(response.error) {
-                        Swal.fire({
-                                icon: 'error',
-                                title: 'error',
-                                text:  response.error
-                            })
-                      }
+                    if(response.success) {
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text:  response.success
+                        })
+
+                    refreshError("produk_jadi");
+
+
+                    getDataDetailPrakitan();
+                    }
                   },
                   error: function(xhr,textStatus,thrownError) {
                   alert(xhr + "\n" + textStatus + "\n" + thrownError);
                   }
               });
-            }
          });
 
 
@@ -296,28 +257,8 @@
          $(document).on("click", "#ubah-master-prakitan", function () {
             let kode_produk_jadi = $("#kode_produk_jadi").val();
             let kode_produk_mentah = $("#kode_produk_mentah").val();
-            let quantity = $("#jumlah_produk_mentah").val();
+            let quantity = $("#quantity").val();
 
-            if($.trim(kode_produk_mentah) == "")
-           {
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Kode Produk Jadi Wajib Di Isi"
-            })
-
-            $(".inputProdukMentah").find("input").addClass("is-invalid");
-            return false;
-           } else  if($.trim(quantity) == "" || $.trim(quantity) == 0){
-            Swal.fire({
-                icon: 'error',
-                title: 'error',
-                text:  "Masukkan Jumlah Produk!"
-            })
-
-            $("#jumlah_produk_mentah").addClass("is-invalid");
-            return false;
-            } else {
                 $.ajax({
                   headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
                   url : "/master-prakitan/detail-master-prakitan/update",
@@ -329,29 +270,33 @@
                   },
                   dataType : "json",
                   success: response => {
-                      console.log(response);
+                        if(response.errors) {
+                            let form_produk = $(".data_produk");
+                                $.each(response.errors, function (prefix, val) {
+                                if(prefix == "kode_produk_jadi") {
+                                    $("#inputProdukJadi").find("input").addClass("is-invalid");
+                                }
+                                $(form_produk).find("#" + prefix + "").addClass("is-invalid");
+                                $(form_produk).find("small." + prefix + "_error").text(val[0]);
+                            })
+                        }
+
                       if(response.success) {
                         Swal.fire({
                                 icon: 'success',
                                 title: 'success',
                                 text:  response.success
                             })
+                        refreshError("produk_mentah");
+
                         getDataDetailPrakitan();
                       }
 
-                      if(response.error) {
-                        Swal.fire({
-                                icon: 'error',
-                                title: 'error',
-                                text:  response.error
-                            })
-                      }
                   },
                   error: function(xhr,textStatus,thrownError) {
                   alert(xhr + "\n" + textStatus + "\n" + thrownError);
                   }
               });
-            }
          });
 
          $(document).on("click", "#deleteDetailMasterPrakitan", function() {
@@ -382,7 +327,6 @@
                             })
                             getDataDetailPrakitan();
                         }
-
 
                             if(response.error) {
                                 Swal.fire({
@@ -441,5 +385,22 @@
             }
             })
          });
+
+         $("#reset").on("click", function () {
+            $(".inputProdukMentah").find("input").val("");
+            $(".inputProdukMentah").find("small").html("");
+            $("#tambah-master-prakitan").show();
+            $("#ubah-master-prakitan").hide();
+         });
+
+         function refreshError(type) {
+            if(type == "produk_jadi") {
+                $("#inputProdukJadi").find("input").removeClass("is-invalid");
+                $("#inputProdukJadi").find("small").html("");
+            }
+            $(".inputProdukMentah").find("input").removeClass("is-invalid");
+            $(".inputProdukMentah").find("small").html("");
+
+         }
     </script>
 @endpush

@@ -19,4 +19,5 @@ Interface PembelianRepository {
 
     public function deletePivotDetailPembelian($no_pembelian, $kode_produk);
 
+    public function getByDetailPembelianComplete($no_pembelian);
 }

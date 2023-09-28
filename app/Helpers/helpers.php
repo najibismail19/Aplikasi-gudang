@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
     function generateNo($code, $table)
     {
@@ -33,5 +37,43 @@ use Illuminate\Support\Facades\DB;
 
     function getNik(){
         return Auth::guard("karyawan")->user()->nik;
+    }
+
+    function downloadExcel(array $columns, $callback, $nameFile) {
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->getDefaultRowDimension()->setRowHeight(20);
+        $highestColumn = $sheet->getHighestColumn();
+
+
+        foreach($columns as $colum => $name_colum) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($colum)->setWidth(20);
+
+            $sheet->setCellValue($colum . '1', $name_colum);
+        }
+
+
+        $alignment_center = \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER;
+
+        foreach($sheet->getRowIterator() as $row) {
+            foreach($row->getCellIterator() as $cell) {
+                $cellCoordinate = $cell->getCoordinate();
+                $sheet->getStyle($cellCoordinate)->getAlignment()->setHorizontal($alignment_center);
+            }
+        }
+
+        $raws = 2;
+        $callback($raws, $sheet);
+
+        $fileName = "emp.xls";
+        $writer = new Xls($spreadsheet);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'. $nameFile .'".xls"'); // Set nama file excel nya
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 ?>

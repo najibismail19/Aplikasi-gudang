@@ -51,8 +51,14 @@ class Produk extends Model
         return $this->hasMany(MasterPrakitan::class, "kode_produk_mentah", "kode_produk");
 
     }
+
     public function masterPrakitanProdukJadi() : HasMany
     {
         return $this->hasMany(MasterPrakitan::class, "kode_produk_jadi", "kode_produk");
+    }
+
+    public function prakitan() : HasMany
+    {
+        return $this->hasMany(Prakitan::class, "kode_produk", "kode_produk");
     }
 }

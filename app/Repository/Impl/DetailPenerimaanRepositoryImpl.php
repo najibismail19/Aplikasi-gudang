@@ -9,4 +9,9 @@ Class DetailPenerimaanRepositoryImpl implements DetailPenerimaanRepository {
     {
         DetailPenerimaan::insert($array);
     }
+
+    public function getDetailPenerimaan($no_penerimaan)
+    {
+        return DetailPenerimaan::with(["produk"])->where("no_penerimaan", $no_penerimaan)->get();
+    }
 }

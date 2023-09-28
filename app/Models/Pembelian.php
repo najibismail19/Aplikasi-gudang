@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pembelian extends Model
 {
@@ -40,5 +41,10 @@ class Pembelian extends Model
     {
        return $this->belongsToMany(Produk::class, "detail_pembelian", "no_pembelian", "kode_produk")
        ->using(DetailPembelian::class);
+    }
+
+    public function penerimaan() : HasOne
+    {
+        return $this->hasOne(Penerimaan::class, "no_pembelian", "no_pembelian");
     }
 }

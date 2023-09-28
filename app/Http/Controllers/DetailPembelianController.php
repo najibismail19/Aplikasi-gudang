@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DetailPembelianCreateRequest;
 use App\Repository\DetailPembelianRepository;
 use App\Repository\PembelianRepository;
 use App\Rules\DupplicateProduk;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class DetailPembelianController extends Controller
@@ -31,7 +33,7 @@ class DetailPembelianController extends Controller
     {
         $pembelian = $this->pembelian->find($no_pembelian);
 
-        if($pembelian == null || $pembelian->karyawan->nik != Auth::guard("karyawan")->user()->nik || $pembelian->status_pembelian == true){
+        if($pembelian == null || $pembelian->karyawan->nik != getNik() || $pembelian->status_pembelian == true){
             return abort(404);
         }
 
@@ -73,15 +75,15 @@ class DetailPembelianController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(request $request)
     {
         try {
             $validation = $request->validate([
                 "no_pembelian" => "required",
-                "kode_produk" => new DupplicateProduk(),
-                "harga" => "required|numeric",
-                "jumlah" => "required|numeric",
-                "total_harga" => "required|numeric"
+                "kode_produk" => "required", new DupplicateProduk(),
+                "harga" => "required|numeric|min:0|not_in:0",
+                "jumlah" => "required|numeric|min:0|not_in:0",
+                "total_harga" => "required|numeric|min:0|not_in:0"
             ]);
 
             $no_pembelian = $request->input("no_pembelian");
@@ -106,7 +108,7 @@ class DetailPembelianController extends Controller
 
             $errors = $exception->validator->errors()->toArray();
 
-            return response()->json(["error" => $errors["kode_produk"]]);
+            return response()->json(["errors" => $errors]);
 
         }
     }
@@ -118,9 +120,9 @@ class DetailPembelianController extends Controller
             $validation = $request->validate([
                 "no_pembelian" => "required",
                 "kode_produk" => "required",
-                "jumlah" => "required",
-                "harga" => "required",
-                "total_harga" => "required"
+                "jumlah" => "required|min:0|not_in:0",
+                "harga" => "required|min:0|not_in:0",
+                "total_harga" => "required|min:0|not_in:0"
             ]);
 
             $no_pembelian = $request->input("no_pembelian");
@@ -144,7 +146,9 @@ class DetailPembelianController extends Controller
 
         } catch (ValidationException $exception) {
 
-            return response()->json(["error" => "Produk Gagal di update"]);
+            $errors = $exception->validator->errors()->toArray();
+
+            return response()->json(["errors" => $errors]);
 
         }
     }
@@ -192,5 +196,23 @@ class DetailPembelianController extends Controller
 
             return response()->json(["success" => "Pembelian Sudah Di Selesaikan"]);
         }
+    }
+
+
+    public function showDetail($no_pembelian, Request $request) : Response
+    {
+        $pembelian = $this->pembelian->getByDetailPembelianComplete($no_pembelian);
+
+        if(!$pembelian){
+            return abort(404);
+        }
+
+        $details = $this->detailPembelian->findByNoPembelian($pembelian->no_pembelian)->get();
+
+        return response()->view("detail_pembelian.show_detail_pembelian", [
+            "pembelian" => $pembelian,
+            "details" => $details,
+            "tanggal_pembelian" => Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('dddd, D MMMM Y')
+        ]);
     }
 }

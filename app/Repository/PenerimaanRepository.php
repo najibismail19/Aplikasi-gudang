@@ -11,4 +11,5 @@ interface PenerimaanRepository {
 
     public function all();
 
+    public function findByNoPenerimaan($no_penerimaan);
 }

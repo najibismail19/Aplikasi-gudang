@@ -26,6 +26,13 @@ class PrakitanController extends Controller
     }
 
     public function index() {
+
+        if(request()->ajax()) {
+
+            return $this->prakitan->getDatatable();
+
+        }
+
         return response()->view("prakitan.prakitan");
     }
 
@@ -71,7 +78,7 @@ class PrakitanController extends Controller
 
                     if($stok) {
                         $total_qty = $request->input("qty_rencana") * $detail->quantity;
-                        if($stok->stok - $total_qty < 1) {
+                        if($stok->stok - $total_qty < 0) {
                             $data[] = [
                                 "kode_produk" => $detail->kode_produk_mentah,
                             ];
@@ -105,7 +112,7 @@ class PrakitanController extends Controller
                         "stok" => DB::raw("stok - $total_qty")
                     ]);
 
-                    $kartu_stock = $this->kartuStok->findByGudangProduk(getIdGudang(), $detail->kode_produk);
+                    $kartu_stock = $this->kartuStok->findByGudangProduk(getIdGudang(), $detail->kode_produk_mentah);
 
                             if($kartu_stock) {
                                 $dataKartuStok = [

@@ -159,6 +159,8 @@
                                     title: 'success',
                                     text:  response.success
                                 });
+
+                                window.location.href = "/prakitan";
                             }
 
 

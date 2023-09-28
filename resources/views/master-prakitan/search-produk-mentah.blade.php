@@ -85,6 +85,8 @@
 
 
     $(document).on("click", ".pilihProdukMentah", function () {
+        $("#ubah-master-prakitan").hide();
+        $("#tambah-master-prakitan").show();
         let kode_produk = $(this).attr("data-kode-produk");
         let nama = $(this).attr("data-nama");
         let harga = $(this).attr("data-harga");

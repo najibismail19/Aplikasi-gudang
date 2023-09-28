@@ -19,6 +19,16 @@ Class PembelianRepositoryImpl implements PembelianRepository {
         $pembelian = Pembelian::select("*")->filter(filter : $filter)->with(["karyawan", "supplier"]);
         return DataTables::of($pembelian)
                 ->addIndexColumn()
+
+                ->filter(function ($query) {
+                    // if(request()-> == "all") return true;
+                    if(trim(request()->input("awal")) != "" && trim(request()->input("akhir")) != ""){
+                        $query->whereBetween('tanggal_pembelian', [request()->input("awal"), request()->input("akhir")]);
+                    } else {
+                        return true;
+                    }
+                }, true)
+
                 ->editColumn('supplier', function (Pembelian $pembelian) {
 
                     return $pembelian->supplier->nama;
@@ -36,23 +46,24 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                 })
                 ->editColumn('tanggal', function (Pembelian $pembelian) {
 
-                    return Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('dddd, D MMMM Y');
+                    return Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('D MMMM Y');
 
                 })
                 ->addColumn('action', function($pembelian){
 
                     $btn = "";
-                    $icon = "check";
 
-                    if(!request()->hasHeader("X-SRC-Pembelian")) {
-
-                        $btn = $btn. "<a id='$pembelian->no_pembelian' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                        $icon = "edit";
-
+                    if(request()->hasHeader("X-SRC-Pembelian")) {
+                        $btn = $btn . "<a class='pilihPembelian btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='check'></i></a>";
+                    } else {
+                        if($pembelian->status_pembelian == false && $pembelian->karyawan->nik == getNik()) {
+                            $btn = $btn . "<a class='btn btn-primary mx-1' href='/pembelian/$pembelian->no_pembelian'><i class='align-middle' data-feather='edit'></i></a>";
+                        } else {
+                            $btn = $btn . "<a class='btn btn-secondary mx-1' href='/pembelian/show-detail/$pembelian->no_pembelian'><i class='align-middle' data-feather='eye'></i></a>";
+                            $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='printer'></i></a>";
+                        }
                     }
 
-                    $actionClick = ($icon == 'edit') ? 'editPembelian' : 'pilihPembelian';
-                    $btn = $btn . "<a class='$actionClick btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='$icon'></i></a>";
 
                     return $btn;
                 })
@@ -102,5 +113,14 @@ Class PembelianRepositoryImpl implements PembelianRepository {
         $pembelian->fill($content);
 
         $pembelian->update();
+    }
+
+
+    public function getByDetailPembelianComplete($no_pembelian)
+    {
+        return Pembelian::select("*")->with(["detailPembelian", "supplier"])
+                            ->where("no_pembelian", $no_pembelian)
+                            ->where("status_pembelian", true)
+                            ->first();
     }
 }

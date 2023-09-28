@@ -13,6 +13,16 @@ Class PenerimaanRepositoryImpl implements PenerimaanRepository {
     {
         return DataTables::of($data)
                             ->addIndexColumn()
+
+                            ->filter(function ($query) {
+                                // if(request()-> == "all") return true;
+                                if(trim(request()->input("awal")) != "" && trim(request()->input("akhir")) != ""){
+                                    $query->whereBetween('tanggal_penerimaan', [request()->input("awal"), request()->input("akhir")]);
+                                } else {
+                                    return true;
+                                }
+                            }, true)
+
                             ->editColumn('karyawan', function (Penerimaan $penerimaan) {
                                 return $penerimaan->karyawan->nama;
                             })
@@ -20,8 +30,8 @@ Class PenerimaanRepositoryImpl implements PenerimaanRepository {
                                 return Carbon::parse($penerimaan->tanggal_penerimaan)->isoFormat('dddd, D MMMM Y');
                             })
                             ->addColumn('action', function($penerimaan){
-                                $btn ="<a class='editpembelian btn btn-primary mx-1'><i class='align-middle' data-feather='edit'></i></a>";
-                                $btn = $btn."<a id='$penerimaan->no_penerimaan' class='hapuspembelian btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+                                $btn ="<a class='btn btn-secondary mx-1' href='/penerimaan/show-detail/$penerimaan->no_penerimaan'><i class='align-middle' data-feather='eye'></i></a>";
+                                $btn = $btn."<a class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
                                 return $btn;
                             })
                             ->rawColumns(['action'])
@@ -36,6 +46,15 @@ Class PenerimaanRepositoryImpl implements PenerimaanRepository {
     public function insert(array $array)
     {
         Penerimaan::insert($array);
+    }
+
+    public function findByNoPenerimaan($no_penerimaan)
+    {
+        $penerimaan =  Penerimaan::find($no_penerimaan);
+        if(!$penerimaan) {
+            return null;
+        }
+        return $penerimaan->with(["pembelian"])->first();
     }
 
 }
