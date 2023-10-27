@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <div class="table-responsive p-2">
-                <table class="table align-items-center mb-0 data-pembelian" style="width: 100%">
+                <table class="table table-bordered table-striped align-items-center mb-0 search-pembelian" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
@@ -19,6 +19,19 @@
                         <th>Action</th>
                       </tr>
                     </thead>
+                    <tbody>
+                        @foreach ($pembelian as $p)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $p->no_pembelian }}</td>
+                                <td>{{ $p->supplier->nama }}</td>
+                                <td>{{ $p->tanggal_pembelian }}</td>
+                                <td>{{ $p->total_keseluruhan }}</td>
+                                <td>{{ $p->karyawan->nama }}</td>
+                                <td><a class='pilihPembelian btn btn-primary mx-1' id={{ $p->no_pembelian }}><i class='align-middle' data-feather='check'></i></a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                   </table>
             </div>
         </div>
@@ -29,55 +42,12 @@
     </div>
   </div>
 <script>
-$(function () {
-    var table = $('.data-pembelian').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-                url: "/pembelian",
-                type: "GET",
-                headers: {
-                    "X-SRC-Pembelian":"Serach Pembelian xxxx",
-                }
-            },
-        columns: [
-            {
-                "data": 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'no_pembelian',
-                name: 'no_pembelian'
-            },
-            {
-                data: 'supplier',
-                name: 'supplier.nama'
-            },
-            {
-                data: 'tanggal',
-                name: 'tanggal'
-            },
-            {
-                data: 'total_keseluruhan',
-                name: 'total_keseluruhan'
-            },
-            {
-                data: 'karyawan',
-                name: 'karyawan.nama'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-        ],
-        drawCallback: function( settings ) {
+
+        $(function () {
             feather.replace();
-        }
-    });
-});
+            $('.search-pembelian').DataTable({
+            });
+         });
 
 $(function () {
 

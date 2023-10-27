@@ -8,6 +8,7 @@ use App\Repository\PrakitanRepository;
 use App\Repository\StokRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PrakitanController extends Controller
 {
@@ -45,7 +46,9 @@ class PrakitanController extends Controller
     public function getMasterPrakitan(Request $request)
     {
         if($request->ajax()) {
-            $view = view('prakitan.search-master-prakitan')->render();
+            $view = view('prakitan.search-master-prakitan',[
+                "produk_master_prakitan" => $this->masterPrakitan->getAll()
+            ])->render();
             return response()->json( array('success' => true, 'modal'=> $view));
         }
     }
@@ -70,9 +73,29 @@ class PrakitanController extends Controller
     {
         if($request->ajax()) {
             try {
-                $kode_produk_jadi = $request->input("kode_produk_jadi");
+
+                try {
+                    $validation = $request->validate([
+                        "no_prakitan" => "required|unique:prakitan",
+                        "kode_produk_jadi" => "required",
+                        "nik" => "required",
+                        "tanggal_rencana" => "required",
+                        "qty_rencana" => "required|min:0|not_in:0",
+                        "deskripsi" => "nullable"
+                    ]);
+                } catch (ValidationException $exception) {
+
+                    $errors = $exception->validator->errors()->toArray();
+
+                    return response()->json(["error_input" => $errors]);
+                }
+
+                $kode_produk_jadi = $validation["kode_produk_jadi"];
+
                 $detail_master = $this->masterPrakitan->getDetailMasterIsActive($kode_produk_jadi);
+
                 $data = [];
+
                 foreach($detail_master as $detail) {
                     $stok = $this->stok->findByLockGudangProduk(getIdGudang(), $detail->kode_produk_mentah);
 
@@ -91,18 +114,19 @@ class PrakitanController extends Controller
                 }
 
                 if(count($data) > 0) {
-                    return response()->json(array("error" => $data));
+                    return response()->json(array("error_stok" => $data));
                 }
 
             DB::beginTransaction();
 
             $this->prakitan->insert([
-                "no_prakitan" => $request->input("no_prakitan"),
-                "kode_produk" => $request->input("kode_produk_jadi"),
-                "nik" => $request->input("nik"),
-                "tanggal_rencana" => $request->input("tanggal_rencana"),
-                "qty_rencana" => $request->input("qty_rencana"),
-          ]);
+                "no_prakitan" => $validation["no_prakitan"],
+                "kode_produk" => $validation["kode_produk_jadi"],
+                "nik" => $validation["nik"],
+                "tanggal_rencana" => $validation["tanggal_rencana"],
+                "qty_rencana" => $validation["qty_rencana"]
+                // "deskripsi" => $validation["deskripsi"],
+            ]);
 
 
                 $detail_master->each(function ($detail) use ($request) {

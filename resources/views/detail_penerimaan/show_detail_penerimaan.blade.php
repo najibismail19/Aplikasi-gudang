@@ -42,7 +42,7 @@
                             <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
                             <a href="/penerimaan/detail-penerimaan/print-pdf/{{ $penerimaan->no_penerimaan }}"class="btn btn-success mb-2">Download PDF</a>
                             <a href="/penerimaan/detail-penerimaan/download-excel/{{ $penerimaan->no_penerimaan }}"class="btn btn-warning mb-2">Download Excel</a>
-                            <table class="table table-striped align-items-center mb-0" style="width: 100%">
+                            <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
                                   <tr>
                                     <th  style="width: 15%;">Kode Produk</th>

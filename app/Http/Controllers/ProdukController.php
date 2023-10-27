@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\File;
 
 class ProdukController extends Controller
 {
@@ -51,7 +52,7 @@ class ProdukController extends Controller
             if($request->file()) {
                 $fileName = $request->file("gambar")->getClientOriginalName();
                 $validation["gambar"] = $fileName;
-                $request->file('gambar')->storeAs('photos/produk', $fileName, 'public');
+                $request->file('gambar')->move(public_path('storage/photos/produk'), $fileName);
             }
 
             // Insert Produk Repository
@@ -72,13 +73,12 @@ class ProdukController extends Controller
         }
     }
 
-    public function update(Request $request, $kode_produk) : JsonResponse
+    public function update(Request $request) : JsonResponse
     {
-        $produk = $this->produk->find($kode_produk);
+        $produk = $this->produk->find($request->input("kode_produk"));
 
         if($produk == null) abort(404);
 
-        $path = "photos/produk/";
         try {
             $validation = $request->validate([
                 'kode_produk' => 'required',
@@ -89,16 +89,25 @@ class ProdukController extends Controller
                 'gambar' => "image|mimes:jpeg,png,jpg,gif,svg|max:2048",
                 'description' => ''
             ]);
-            // Not Upload Image
+
+            // Upload Image
+
             if($request->file("gambar") != null) {
                 $inputFile  = $request->file("gambar");
+
                 $fileName = $inputFile->getClientOriginalName();
                     if($fileName != $produk->gambar) {
-                        // Update Image
-                        Storage::delete($path . $produk->gambar);
 
-                        $name = $inputFile->getClientOriginalName();
-                        $inputFile->storePubliclyAs("photos/produk", $name , "public");
+                        $imagePath = public_path('storage/photos/produk/' . $produk->gambar);
+                        // Memeriksa apakah file ada sebelum dihapus
+                        if (File::exists($imagePath) && $produk->gambar != "default.png") {
+                            // Menghapus file
+                            File::delete($imagePath);
+                        }
+
+                        $name =  date("i") . $inputFile->getClientOriginalName();
+
+                        $inputFile->move(public_path('storage/photos/produk'), $name);
 
                         $validation["gambar"] = $name;
                     } else {
@@ -106,14 +115,21 @@ class ProdukController extends Controller
                         $validation["gambar"] = $produk->gambar;
                     }
                 } else {
-                    $validation["gambar"] = "";
-                    Storage::disk("public")->delete($path . $produk->gambar);
+
+                    $validation["gambar"] = "default.png";
+
+                    $imagePath = public_path('storage/photos/produk/' . $produk->gambar);
+
+                    if (File::exists($imagePath) && $produk->gambar != "default.png") {
+                        // Menghapus file
+                        File::delete($imagePath);
+                    }
                 }
 
                     $produk->fill($validation);
                     $produk->update();
                 if ($produk) {
-                    return response()->json(["success" => "Success Update {$kode_produk}"]);
+                    return response()->json(["success" => "Success Update {$produk->kode_produk}"]);
                 }
             } catch (ValidationException $exception) {
                 $response = $exception->validator->errors()->toArray();

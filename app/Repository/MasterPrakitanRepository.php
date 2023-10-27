@@ -4,6 +4,9 @@ namespace App\Repository;
 use Illuminate\Http\JsonResponse;
 
 interface MasterPrakitanRepository {
+
+    public function getAll();
+
     public function getDatatable(): JsonResponse;
 
     public function getDetailMaster($kode_produk_jadi);

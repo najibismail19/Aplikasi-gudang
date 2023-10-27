@@ -67,42 +67,47 @@
                 $("#modalTambahProduk").modal("show");
             });
 
-            $(document).on("submit", "#formTambahProduk", function(e){
-                e.preventDefault();
-                let form = this;
-                $.ajax({
-                    headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-                    url : $(this).attr("action"),
-                    method : $(this).attr("method"),
-                    enctype: 'multipart/form-data',
-                    data : new FormData(form),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType : "json",
-                    success: data => {
-                        console.log(data);
-                        if(data.error) {
-                            $.each(data.error, function (prefix, val) {
-                                $(form).find("small." + prefix + "_error").text(val[0]);
-                                $(form).find("#"+ prefix + "").addClass("is-invalid");
-                            })
-                        }
-                        if(data.success){
-                            $("#modalTambahProduk").modal("hide");
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'success',
-                                    text:  data.success,
-                                })
-                            $('.data-produk').DataTable().ajax.reload(null, false);
-                        }
-                    },
-                    error: function(xhr,textStatus,thrownError) {
-                    alert(xhr + "\n" + textStatus + "\n" + thrownError);
+            $(document).ready(function () {
+                $('input').attr('autocomplete', 'off');
+            })
+
+        $(document).on("submit", "#formTambahProduk", function(e){
+
+            e.preventDefault();
+            let form = this;
+            $.ajax({
+                headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
+                url : $(this).attr("action"),
+                method : $(this).attr("method"),
+                enctype: 'multipart/form-data',
+                data : new FormData(form),
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType : "json",
+                success: data => {
+                    console.log(data);
+                    if(data.error) {
+                        $.each(data.error, function (prefix, val) {
+                            $(form).find("small." + prefix + "_error").text(val[0]);
+                            $(form).find("#"+ prefix + "").addClass("is-invalid");
+                        })
                     }
-                });
+                    if(data.success){
+                        $("#modalTambahProduk").modal("hide");
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'success',
+                                text:  data.success,
+                            })
+                        $('.data-produk').DataTable().ajax.reload(null, false);
+                    }
+                },
+                error: function(xhr,textStatus,thrownError) {
+                alert(xhr + "\n" + textStatus + "\n" + thrownError);
+                }
             });
+        });
 
             $("input[type=file][name=gambar]").val("");
             $("input[type=file][name=gambar]").on("change", function () {

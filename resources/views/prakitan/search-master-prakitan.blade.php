@@ -10,17 +10,31 @@
         </div>
         <div class="modal-body">
             <div class="table-responsive p-2">
-                <table class="table align-items-center mb-0 data-search-master-prakitan" style="width: 100%">
+                <table class="table table-bordered table-striped align-items-center mb-0 data-search-master-prakitan" style="width: 100%">
                   <thead>
                     <tr>
                         <th style="width: 5%;">No</th>
-                        <th  style="width: 15%;">Kode Produk</th>
-                        <th style="width: 15%;">Nama</th>
+                        <th style="width: 20%;">Kode Produk</th>
+                        <th style="width: 20%;">Nama</th>
                         <th>Satuan</th>
                         <th>Jenis Produk</th>
                         <th>Action</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    @foreach ($produk_master_prakitan as $produk)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $produk->kode_produk }}</td>
+                            <td>{{ $produk->nama }}</td>
+                            <td>{{ $produk->satuan }}</td>
+                            <td>{{ ($produk->jenis == 0 ) ? "Barang Mentah" : "Barang Jadi" }}</td>
+                            <td>
+                                <a class='btn btn-primary mx-1' id='pilihMasterPrakitan' data-kode_produk='{{$produk->kode_produk}}' data-nama_produk='{{$produk->nama}}' data-satuan='{{ $produk->satuan }}'><i class='align-middle' data-feather='check'></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
+                  </tbody>
                 </table>
               </div>
         </div>
@@ -33,51 +47,7 @@
   </div>
 
 <script>
-$(function () {
-    var table = $('.data-search-master-prakitan').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-                url: "/master-prakitan",
-                type: "GET",
-                headers: {
-                    "X-SRC-MTR-Prakitan":"P-J",
-                }
-        },
-        columns: [
-            {
-                "data": 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'kode_produk',
-                name: 'produk.kode_produk'
-            },
-            {
-                data: 'nama',
-                name: 'produk.nama'
-            },
-            {
-                data: 'satuan',
-                name: 'produk.satuan'
-            },
-            {
-                data: 'jenis_produk',
-                name: 'jenis_produk'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-        ],
-        drawCallback: function( settings ) {
-            feather.replace();
-        }
-    });
-});
+feather.replace();
 
 $(document).on("click", "#searchMasterPrakitan", function () {
     // alert("berhasil!!!");
@@ -94,9 +64,11 @@ $(document).on("keyup", "#qty_rencana", function () {
 $(document).on("click", "#pilihMasterPrakitan", function () {
     let kode_produk = $(this).attr("data-kode_produk");
     let nama_produk = $(this).attr("data-nama_produk");
+    let satuan = $(this).attr("data-satuan");
     $("#kode_produk_jadi").val(kode_produk);
     $("#nama_produk_jadi").val(nama_produk);
-    $("#jenis_produk_jadi").val("Barang Jadi");
+    $("#jenis_produk").val("Barang Jadi");
+    $("#satuan").val(satuan);
 
     // let qty = $("#qty_rencana").val();
     $.ajax({

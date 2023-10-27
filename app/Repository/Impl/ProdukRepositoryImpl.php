@@ -20,18 +20,18 @@ class ProdukRepositoryImpl implements ProdukRepository{
                 ->editColumn('jenis', function (Produk $produk) {
                    return ($produk->jenis == true ) ? "Barang Jadi" : "Barang Mentah";
                 })
+                ->editColumn('harga', function (Produk $produk) {
+                   return 'Rp '.number_format($produk->harga, 0, ',', '.');
+                })
                 ->addColumn('action', function($produk){
-                    $icon = "check";
                     $btn = "";
-                    if(!request()->hasHeader("X-SRC-Produk") && !request()->hasHeader("X-SRC-PRK-Produk")) {
-                        $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                        $icon = "edit";
-                    }
-                    $actionClick = ($icon == "edit") ? "editProduk" : "pilihProduk";
-
-                    $actionClick = (request()->header("X-SRC-PRK-Produk") == "P-M") ? "pilihProdukMentah" : $actionClick;
-
-                    $btn = $btn. "<a class='$actionClick btn btn-primary mx-1'
+                    $btn = $btn ."<a
+                                        data-image='$produk->gambar'
+                                        data-kode_produk='$produk->kode_produk'
+                                        data-nama='$produk->nama'
+                     class='showImage btn btn-success mx-1'><i class='align-middle' data-feather='image'></i></a>";
+                    $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+                    $btn = $btn. "<a class='editProduk btn btn-primary mx-1'
                         data-kode-produk='$produk->kode_produk'
                         data-nama='$produk->nama'
                         data-satuan='$produk->satuan'
@@ -39,7 +39,7 @@ class ProdukRepositoryImpl implements ProdukRepository{
                         data-jenis='$produk->jenis'
                         data-gambar='$produk->gambar'
                         data-deskripsi='$produk->deskripsi'
-                    ><i class='align-middle' data-feather='$icon'></i></a>";
+                    ><i class='align-middle' data-feather='edit'></i></a>";
 
                     return $btn;
                 })
@@ -66,4 +66,8 @@ class ProdukRepositoryImpl implements ProdukRepository{
         Produk::destroy($kode_produk);
     }
 
+    public function getAll()
+    {
+        return Produk::all();
+    }
 }

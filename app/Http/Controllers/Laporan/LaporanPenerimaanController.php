@@ -14,12 +14,8 @@ class LaporanPenerimaanController extends Controller
     function getPenerimaan()
     {
         return  Penerimaan::select("*", DB::raw("DATE_FORMAT(tanggal_penerimaan, '%d-%m-%Y') as tanggal"))->with(["karyawan", "pembelian"])
-                                ->where(function(Builder $builder) {
-                                    if(trim(request()->input("awal")) != "" && trim(request()->input("akhir")) != "") {
-                                        $builder->whereBetween('tanggal_penerimaan', [request()->input("awal"), request()->input("akhir")]);
-                                    }
-                                })
-                                ->get();
+                            ->filter(request(["awal", "akhir"]))
+                            ->get();
     }
 
     public function cetakLaporan()

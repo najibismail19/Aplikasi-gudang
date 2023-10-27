@@ -22,16 +22,21 @@ Class PenerimaanRepositoryImpl implements PenerimaanRepository {
                                     return true;
                                 }
                             }, true)
-
+                            ->editColumn('supplier', function (Penerimaan $penerimaan) {
+                                return $penerimaan->pembelian->supplier->nama;
+                            })
+                            ->editColumn('total_produk', function (Penerimaan $penerimaan) {
+                                return count($penerimaan->pembelian->detailPembelian);
+                            })
                             ->editColumn('karyawan', function (Penerimaan $penerimaan) {
                                 return $penerimaan->karyawan->nama;
                             })
                             ->editColumn('tanggal', function (Penerimaan $penerimaan) {
-                                return Carbon::parse($penerimaan->tanggal_penerimaan)->isoFormat('dddd, D MMMM Y');
+                                return Carbon::parse($penerimaan->tanggal_penerimaan)->isoFormat('D MMMM Y');
                             })
                             ->addColumn('action', function($penerimaan){
-                                $btn ="<a class='btn btn-secondary mx-1' href='/penerimaan/show-detail/$penerimaan->no_penerimaan'><i class='align-middle' data-feather='eye'></i></a>";
-                                $btn = $btn."<a class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
+                                $btn = "<a class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
+                                $btn = $btn . "<a class='btn btn-secondary mx-1' href='/penerimaan/show-detail/$penerimaan->no_penerimaan'><i class='align-middle' data-feather='eye'></i></a>";
                                 return $btn;
                             })
                             ->rawColumns(['action'])

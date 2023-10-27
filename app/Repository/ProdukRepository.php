@@ -13,5 +13,7 @@ interface ProdukRepository {
     public function find($kode_produk);
 
     public function delete($kode_produk);
+
+    public function getAll();
 }
 

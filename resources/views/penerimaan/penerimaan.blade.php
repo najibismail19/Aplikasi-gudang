@@ -15,37 +15,34 @@
                     <div class="col-md-5">
                         <button class="btn btn-success px-3" id="cetak_pdf">PDF</button>
                         <button class="btn btn-warning px-3" id="download_excel">Excel</button>
-                        <button class="btn btn-primary px-3">Word</button>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row input_tanggal">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tanggal Awal</label>
-                            <input type="date" class="form-control" id="tanggal_awal" aria-describedby="emailHelp" placeholder="Enter email">
+                            <input type="date" class="form-control" id="tanggal_awal" name="awal">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tanggal Akhir</label>
-                            <input type="date" class="form-control" id="tanggal_akhir" aria-describedby="emailHelp" placeholder="Enter email">
+                            <input type="date" class="form-control" id="tanggal_akhir" name="akhir">
                         </div>
-                    </div>
-                    <div class="col-md-3" style="margin-top: 1.9rem;">
-                        <button class="btn btn-secondary" id="reset">Reset</button>
-                        <button class="btn btn-primary" id="searchPenerimaan">Search</button>
                     </div>
                 </div>
                 <div class="table-responsive p-2">
-                  <table class="table align-items-center mb-0 data-penerimaan" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-penerimaan" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
                         <th  style="width: 15%;">No Penerimaan</th>
+                        <th>Supplier</th>
+                        <th>Total Jenis</th>
+                        <th>Tanggal Penerimaan</th>
                         <th>Penerima</th>
-                        <th>Tanggal </th>
-                        <th style="width: 15%;">No Pembelian</th>
-                        <th>Deskripsi</th>
+                        <th>No Pembelian</th>
+                        <th>Deskripsi Penerimaan</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -84,12 +81,20 @@
                         name: 'no_penerimaan'
                     },
                     {
-                        data: 'karyawan',
-                        name: 'karyawan.nama'
+                        data: 'supplier',
+                        name: 'supplier'
+                    },
+                    {
+                        data: 'total_produk',
+                        name: 'total_produk'
                     },
                     {
                         data: 'tanggal',
                         name: 'tanggal'
+                    },
+                    {
+                        data: 'karyawan',
+                        name: 'karyawan.nama'
                     },
                     {
                         data: 'no_pembelian',
@@ -113,20 +118,21 @@
         });
 
 
-        function validation(path = null, action = null, callback) {
+        function validation(path) {
             let tanggal_awal = $("#tanggal_awal").val();
             let tanggal_akhir = $("#tanggal_akhir").val();
 
             if((tanggal_awal == "" && tanggal_akhir == "") || (tanggal_awal != "" && tanggal_akhir != ""))  {
-                if(action != "search") {
-                    if(tanggal_awal == "" && tanggal_akhir == "") {
-                        window.location.href = path;
-                    } else {
-                        window.location.href = path + "?awal=" + tanggal_awal + "&akhir=" + tanggal_akhir;
-                    }
-                }
+                let string_query_param = "?";
+                    $(".input_tanggal input").each(function () {
+                        if($.trim($(this).val()) != "") {
+                                string_query_param  += $.trim($(this).attr("name")) + "="  + $.trim($(this).val()) + "&";
+                        }
+                    });
 
-                callback();
+                    let query_param = string_query_param.slice(0, -1);
+
+                    window.location.href = path + query_param;
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -145,8 +151,8 @@
             validation("/penerimaan/print/export-excel");
         });
 
-        $("#searchPenerimaan").on("click", function () {
-            validation(null, "search", function() {
+        $(".input_tanggal input").each(function (){
+            $(this).on("change", function () {
                 $('.data-penerimaan').DataTable().ajax.reload(null, false);
             });
         });

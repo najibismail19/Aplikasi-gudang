@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
+use App\Repository\DetailPembelianRepository;
 use App\Repository\PembelianRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class PembelianController extends Controller
 {
     private PembelianRepository $pembelian;
 
-    public function __construct(PembelianRepository $pembelian) {
+    private DetailPembelianRepository $detailPembelian;
+
+    public function __construct(PembelianRepository $pembelian, DetailPembelianRepository $detailPembelian) {
+
+        // if (Gate::allows('pembelian')) {
+        //     abort(404);
+        // }
+
         $this->pembelian = $pembelian;
+
+        $this->detailPembelian = $detailPembelian;
     }
 
     public function index(Request $request) : Response | JsonResponse
@@ -37,7 +49,9 @@ class PembelianController extends Controller
     public function getModalSupplier(Request $request) : JsonResponse
     {
         if($request->ajax()) {
-            $view = view('pembelian.get-modal-supplier')->render();
+            $view = view('pembelian.get-modal-supplier',[
+                "suppliers" => Supplier::all()
+            ])->render();
             return response()->json( array('success' => true, 'modal'=> $view));
         }
     }
@@ -55,5 +69,32 @@ class PembelianController extends Controller
             $this->pembelian->insert($pembelian);
 
             return redirect()->route("detail.pembelian", [ "no_pembelian" => $pembelian["no_pembelian"]]);
+        }
+
+
+
+        public function delete(Request $request, $no_pembelian) {
+            if($request->ajax()) {
+                $pembelian = $this->pembelian->find($no_pembelian);
+
+                if($pembelian->nik != getNik()){
+
+                    return response()->json([
+                        "error" => "Anda Tidak Berhak Mengapus Transaksi Orang Lain"
+                    ]);
+                }
+
+                $details = $this->detailPembelian->findByNoPembelian($pembelian->no_pembelian)->get();
+
+                $details->each(function ($detail)  {
+                    $this->detailPembelian->deleteByNoPembelianKodeProduk($detail->no_pembelian, $detail->kode_produk);
+                });
+
+                $this->pembelian->delete($pembelian->no_pembelian);
+
+                return response()->json([
+                    "success" => "Data Penjualan Berhasil Dihapus"
+                ]);
+            }
         }
 }

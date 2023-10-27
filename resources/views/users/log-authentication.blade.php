@@ -35,6 +35,8 @@
 
 @push('script')
     <script>
+        feather.replace();
+
           $(function () {
 
             var table = $('.data-log-authentication').DataTable({

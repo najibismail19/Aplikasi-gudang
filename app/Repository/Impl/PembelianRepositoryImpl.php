@@ -6,27 +6,24 @@ use App\Repository\PembelianRepository;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 Class PembelianRepositoryImpl implements PembelianRepository {
 
     public function getDatatable(): JsonResponse
     {
-        $filter["status_pembelian"] = false;
-        if(request()->hasHeader("X-SRC-Pembelian"))
-        {
-            $filter["status_pembelian"] = true;
-        }
-        $pembelian = Pembelian::select("*")->filter(filter : $filter)->with(["karyawan", "supplier"]);
+        $pembelian = Pembelian::select("*")->with(["karyawan", "supplier"]);
         return DataTables::of($pembelian)
                 ->addIndexColumn()
 
                 ->filter(function ($query) {
-                    // if(request()-> == "all") return true;
+
                     if(trim(request()->input("awal")) != "" && trim(request()->input("akhir")) != ""){
+
                         $query->whereBetween('tanggal_pembelian', [request()->input("awal"), request()->input("akhir")]);
-                    } else {
-                        return true;
+
                     }
+
                 }, true)
 
                 ->editColumn('supplier', function (Pembelian $pembelian) {
@@ -44,9 +41,22 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                     return count($pembelian->detailPembelian);
 
                 })
+                ->editColumn('total_harga', function (Pembelian $pembelian) {
+
+                    return 'Rp '.number_format($pembelian->total_keseluruhan, 0, ',', '.');
+
+                })
                 ->editColumn('tanggal', function (Pembelian $pembelian) {
 
                     return Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('D MMMM Y');
+
+                })
+                ->addColumn('status', function (Pembelian $pembelian) {
+
+                if($pembelian->status_penerimaan) {
+                    return "<span class='badge bg-success'>Sudah Diterima</span>";
+                }
+                return "<span class='badge bg-danger'>Belum Diterima</span>";
 
                 })
                 ->addColumn('action', function($pembelian){
@@ -56,18 +66,20 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                     if(request()->hasHeader("X-SRC-Pembelian")) {
                         $btn = $btn . "<a class='pilihPembelian btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='check'></i></a>";
                     } else {
+                        if($pembelian->status_pembelian == true) {
+                            $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' id='$pembelian->no_pembelian' href='/pembelian/detail-pembelian/print-pdf/$pembelian->no_pembelian'><i class='align-middle' data-feather='printer'></i></a>";
+                            $btn = $btn . "<a class='btn btn-secondary mx-1' href='/pembelian/show-detail/$pembelian->no_pembelian'><i class='align-middle' data-feather='eye'></i></a>";
+                        }
                         if($pembelian->status_pembelian == false && $pembelian->karyawan->nik == getNik()) {
                             $btn = $btn . "<a class='btn btn-primary mx-1' href='/pembelian/$pembelian->no_pembelian'><i class='align-middle' data-feather='edit'></i></a>";
-                        } else {
-                            $btn = $btn . "<a class='btn btn-secondary mx-1' href='/pembelian/show-detail/$pembelian->no_pembelian'><i class='align-middle' data-feather='eye'></i></a>";
-                            $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='printer'></i></a>";
+                            $btn = $btn . "<a class='deletePembelian btn btn-danger mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='trash'></i></a>";
                         }
                     }
 
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
     }
 
@@ -122,5 +134,26 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                             ->where("no_pembelian", $no_pembelian)
                             ->where("status_pembelian", true)
                             ->first();
+    }
+
+    public function getPembelianBeforeSend()
+    {
+        return Pembelian::select("*")->with(["detailPembelian", "supplier"])
+                            ->where("status_pembelian", true)
+                            ->where("status_penerimaan", false)
+                            ->get();
+    }
+
+    public function ByDateBetween($start, $end)
+    {
+        return Pembelian::select("*", DB::raw("DATE_FORMAT(tanggal_pembelian, '%Y-%m-%Y') as tanggal"))->with(["detailPembelian"])
+                        ->where('status_pembelian', true)
+                        ->whereBetween('tanggal_pembelian', [$start, $end])
+                        ->get();
+    }
+
+    public function delete($no_pembelian)
+    {
+        Pembelian::destroy($no_pembelian);
     }
 }

@@ -36,9 +36,9 @@
                         </div>
                         <div class="col-md-8">
                             <h2 style="margin-bottom: 2rem;">Detail Prakitan</h2>
-                            <table class="table table-striped align-items-center mb-0" style="width: 100%">
+                            <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
-                                  <tr>
+                                  <tr style="background-color: rgba(182, 192, 183, .75)">
                                     <th  style="width: 15%;">Kode Produk</th>
                                     <th style="width: 15%;">Nama</th>
                                     <th>Diambil</th>
@@ -60,16 +60,14 @@
                                     @endforeach
                                 </tbody>
                               </table>
-                              <div class="row mt-4">
+                              <div class="row justify-content-end mt-4">
                                 <div class="col-md-6">
                                     <div class="mb-4 row">
                                         <label for="qty_hasil" class="col-sm-5 col-form-label">Qty Hasil*</label>
                                         <div class="col-sm-7">
                                             <input type="number" class="form-control" placeholder="Jumlah Produk" id="qty_hasil">
                                         </div>
-                                      </div>
-                                </div>
-                                <div class="col-md-6">
+                                    </div>
                                     <button class="btn btn-success" style="float: right;" id="selesai_prakitan"><i data-feather="send"></i>&nbsp;Selesai dan sudahi Prakitan</button>
                                 </div>
                               </div>
@@ -85,6 +83,8 @@
 @endsection
 @push('script')
 <script>
+
+    feather.replace();
 
     $("#qty_hasil").on("keyup", function () {
          $("#data-detail-prakitan tr").each(function () {
@@ -129,7 +129,21 @@
                 },
                 dataType : "json",
                 success: response => {
-                    console.log(response);
+                    if(response.success) {
+                        Swal.fire({
+                                icon: 'success',
+                                title: 'success',
+                                text:  response.success
+                            });
+                        window.location.href = "/prakitan";
+                    }
+                    if(response.error) {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'error',
+                                text:  response.error
+                            });
+                    }
                 },
                 error: (xhr,textStatus,thrownError) => {
                     alert(xhr + "\n" + textStatus + "\n" + thrownError);
@@ -137,19 +151,19 @@
             });
         }
     });
-    // $("#data-detail-prakitan tr").each(function () {
-    //     let tr = $(this);
-    //     $(tr).find(".qty_digunakan").on("keyup", function() {
+    $("#data-detail-prakitan tr").each(function () {
+        let tr = $(this);
+        $(tr).find(".qty_digunakan").on("keyup", function() {
 
-    //         let qty_diambil = $(tr).find(".qty_diambil").val();
-    //         let sisa = parseInt(qty_diambil) - parseInt($(this).val());
-    //         if(sisa < 0) {
-    //             $(tr).find(".qty_sisa").addClass("is-invalid");
-    //         } else {
-    //             $(tr).find(".qty_sisa").removeClass("is-invalid");
-    //         }
-    //         $(tr).find(".qty_sisa").val(sisa);
-    //     })
-    // });
+            let qty_diambil = $(tr).find(".qty_diambil").val();
+            let sisa = parseInt(qty_diambil) - parseInt($(this).val());
+            if(sisa < 0) {
+                $(tr).find(".qty_sisa").addClass("is-invalid");
+            } else {
+                $(tr).find(".qty_sisa").removeClass("is-invalid");
+            }
+            $(tr).find(".qty_sisa").val(sisa);
+        })
+    });
 </script>
 @endpush

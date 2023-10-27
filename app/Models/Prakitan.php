@@ -22,9 +22,9 @@ class Prakitan extends Model
 
     public function scopeFilter($query, array $filter)
     {
-        $query->when($filter["awal"] ?? false, function ($query, $tanggal_awal) {
-            $query->when($filter["akhir"] ?? false, function ($query, $tanggal_akhir) use ($tanggal_awal) {
-                return $query->whereBetween('tanggal_actual_prakitan', [$tanggal_awal, $tanggal_awal]);
+        $query->when($filter["awal"] ?? false, function ($query) use($filter) {
+            $query->when($filter["akhir"] ?? false, function ($query) use ($filter) {
+                return $query->whereBetween('tanggal_actual_prakitan', [$filter["awal"], $filter["akhir"]]);
             });
         });
     }

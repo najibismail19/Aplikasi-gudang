@@ -67,7 +67,13 @@ class PenerimaanController extends Controller
 
     public function searchPenerimaan(Request $request) : JsonResponse
     {
-        $view = view('penerimaan.search-pembelian')->render();
+        $view = view('penerimaan.search-pembelian', [
+            "pembelian" => $this->pembelian->getPembelianBeforeSend()->transform(function ($pembelian) {
+                $pembelian->tanggal_pembelian = Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('D MMMM Y');
+                $pembelian->total_keseluruhan = 'Rp '.number_format($pembelian->total_keseluruhan, 0, ',', '.');
+                return $pembelian;
+            })
+        ])->render();
         return response()->json( array('success' => true, 'modal'=> $view));
     }
 
@@ -79,8 +85,10 @@ class PenerimaanController extends Controller
             $pembelian = [
                 "no_pembelian" => $pembelian->no_pembelian,
                 "nama_supplier" => $pembelian->supplier->nama,
-                "tanggal_pembelian" => Carbon::parse($pembelian->tanggal_pembelian)->format("Y-m-d"),
-                "karyawan_input" => $pembelian->karyawan->nama,
+                "karyawan" => $pembelian->karyawan->nama,
+                "alamat_supplier" => $pembelian->supplier->alamat,
+                "jabatan" => $pembelian->karyawan->jabatan->nama_jabatan,
+                "tanggal_pembelian" =>  Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('D MMMM Y'),
                 "deskripsi" => $pembelian->deskripsi,
                 "total_produk" => count($pembelian->detailPembelian),
                 "total_keseluruhan" => "Rp. " . number_format($pembelian->total_keseluruhan),

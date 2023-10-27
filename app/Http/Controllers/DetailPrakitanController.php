@@ -54,6 +54,13 @@ class DetailPrakitanController extends Controller
     {
         if($request->ajax()) {
             try {
+
+                if($request->input("qty_hasil") > $request->input("qty_rencana")) {
+                    return response()->json([
+                        "error" => "Qty hasil tidak boleh melebihi qty rencana!"
+                    ]);
+                }
+
                 DB::beginTransaction();
 
                 $prakitan = $this->prakitan->find(request()->input("no_prakitan"));

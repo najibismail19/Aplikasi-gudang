@@ -16,6 +16,7 @@ class DetailPrakitan extends Pivot
     protected $reletedKey = "kode_produk";
     public $timestamps = false;
 
+
     protected $fillable = [
         "no_prakitan",
         "kode_produk",

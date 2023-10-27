@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="table-responsive p-2">
-                  <table class="table table-striped  align-items-center mb-0 data-prakitan" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-prakitan" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>

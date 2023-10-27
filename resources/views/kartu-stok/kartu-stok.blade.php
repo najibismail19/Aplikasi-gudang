@@ -9,26 +9,23 @@
             <div class="card mb-4">
               <div class="card-header">
                   <div class="row mb-2">
-                      <div class="col-md-5">
-                          <button class="btn btn-success px-3" id="cetak_pdf">PDF</button>
-                          <button class="btn btn-warning px-3" id="export_excel">Excel</button>
-                      </div>
+
                   </div>
                   <div class="row searchAll">
-                      <div class="row ms-3">
-                          <div class="col-md-3">
+                      <div class="row align-items-center">
+                          <div class="col-md-2">
                               <div class="form-group">
                                   <label for="tanggal_awal">Tanggal Awal</label>
                                   <input type="date" class="form-control" id="tanggal_awal" name="awal">
                               </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                               <div class="form-group">
                                   <label for="tanggal_akhir">Tanggal Akhir</label>
                                   <input type="date" class="form-control" id="tanggal_akhir" name="akhir">
                               </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                               <div class="form-group">
                                   <label for="exampleInputEmail1">By Gudang</label>
                                   <select class="custom-select" id="id_gudang" name="gudang">
@@ -39,26 +36,28 @@
                                   </select>
                               </div>
                           </div>
-                      </div>
-                      <div class="row ms-3">
-                        <div class="col-md-3">
+                          <div class="col-md-2">
                             <div class="form-group">
                                 <label for="no_referensi">No Referensi</label>
-                                <input type="text" placeholder="No Referensi" class="form-control" id="no_referensi" name="no-referensi">
+                                <input type="text" placeholder="No Referensi" class="form-control" id="no_referensi" name="no_referensi">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="kode_produk">Kode Produk</label>
-                                <input type="text" placeholder="Kode Produk" class="form-control" id="kode_produk" name="kode-produk">
+                                <input type="text" placeholder="Kode Produk" class="form-control" id="kode_produk" name="kode_produk">
                             </div>
+                        </div>
+                        <div class="col-md-2 mt-3">
+                            <button class="btn btn-success px-3" id="cetak_pdf">PDF</button>
+                            <button class="btn btn-warning px-3" id="export_excel">Excel</button>
                         </div>
                       </div>
                   </div>
               </div>
               <div class="card-body pb-2">
                 <div class="table-responsive p-2">
-                  <table class="table table-striped  align-items-center mb-0 data-kartu-stok" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-kartu-stok" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
@@ -162,14 +161,14 @@
                     let string_query_param = "?";
                     $(".searchAll input").each(function () {
                         if($.trim($(this).val()) != "") {
-                            if($(this).attr("name") == "akhir") {
-                                let id_gudang = $("#id_gudang");
-                                string_query_param  += $.trim($(this).attr("name")) + "="  + $.trim($(this).val()) + "&" + $.trim($(id_gudang).attr("name")) + "=" + $.trim($(id_gudang).val()) + "&";
-                            } else {
                                 string_query_param  += $.trim($(this).attr("name")) + "="  + $.trim($(this).val()) + "&";
-                            }
                         }
                     });
+
+                    let id_gudang = $("#id_gudang");
+                    if($(id_gudang).val() != "all") {
+                        string_query_param  += $.trim($(id_gudang).attr("name")) + "=" + $.trim($(id_gudang).val()) + "&";
+                    }
 
                     let query_param = string_query_param.slice(0, -1);
 

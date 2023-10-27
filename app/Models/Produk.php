@@ -33,11 +33,17 @@ class Produk extends Model
         });
     }
 
-
     public function detailPembelian() : BelongsToMany
     {
        return $this->belongsToMany(Pembelian::class, "detail_pembelian", "kode_produk", "no_pembelian")
        ->using(DetailPembelian::class);;
+    }
+
+
+    public function detailPenjualan() : BelongsToMany
+    {
+       return $this->belongsToMany(Penjualan::class, "detail_penjualan", "kode_produk", "no_penjualan")
+       ->using(DetailPenjualan::class);;
     }
 
     public function detailPrakitan() : BelongsToMany

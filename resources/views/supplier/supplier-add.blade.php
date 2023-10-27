@@ -2,11 +2,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title" id="staticBackdropLabel">Tamabah Supplier</h2>
+          <h2 class="modal-title" id="staticBackdropLabel">Tambah Supplier</h2>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="/supplier" enctype="multipart/form-data" id="formTambahSupplier">
+            <form method="POST" action="/supplier" id="formTambahSupplier">
                 <div class="mb-3">
                     <label for="id_supplier" class="form-label">ID Supplier*</label>
                     <input type="text" id="id_supplier" class="form-control" name="id_supplier" placeholder="ID Supplier">
@@ -14,7 +14,7 @@
                   </div>
                   <div class="mb-3">
                     <label for="nama" class="form-label">Nama*</label>
-                    <input type="text" id="nama" class="form-control" name="nama" placeholder="Nama Produk">
+                    <input type="text" id="nama" class="form-control" name="nama" placeholder="Nama Supplier">
                     <small class="text-danger error_text nama_error"></small>
                   </div>
                   <div class="mb-3">
@@ -42,16 +42,17 @@
   </div>
     <script>
             $("#tambahSupplier").on("click", function () {
-
-                // let form = $("#formAddItem");
-                // $(form).find("input").removeClass("is-invalid");
-                // $(form).find(".error_text").html("");
-                // let form = $("#formTambahProduk");
-                // $(form).find(".img-holder").html('<img src="/storage/photos/produk/default.png" class="img-fluid" style="max-width:100%;"/>');
+                $("#formTambahSupplier").find("input").removeClass("is-invalid");
+                $("#formTambahSupplier").find("small").html("");
                 $("#modalTambahSupplier").modal("show");
             });
 
+            $(document).ready(function () {
+                $('input').attr('autocomplete', 'off');
+            })
+
             $(document).on("submit", "#formTambahSupplier", function(e){
+                let form = $(this);
                 e.preventDefault();
                 $.ajax({
                     headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },

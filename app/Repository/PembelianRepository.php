@@ -7,7 +7,12 @@ Interface PembelianRepository {
 
     public function getDatatable() : JsonResponse;
 
+    public function ByDateBetween($start, $end);
+
     public function insert($data);
+
+    public function delete($no_pembelian);
+
 
     public function find($no_pembelian);
 
@@ -20,4 +25,6 @@ Interface PembelianRepository {
     public function deletePivotDetailPembelian($no_pembelian, $kode_produk);
 
     public function getByDetailPembelianComplete($no_pembelian);
+
+    public function getPembelianBeforeSend();
 }

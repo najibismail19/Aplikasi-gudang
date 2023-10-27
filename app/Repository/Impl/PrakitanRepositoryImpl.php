@@ -54,7 +54,8 @@ Class PrakitanRepositoryImpl implements PrakitanRepository{
                         $btn = $btn . "<a href='/prakitan/$prakitan->no_prakitan' class='btn btn-primary'><i class='align-middle' data-feather='edit'></i></a>";
                     }
                 } else {
-                    $btn = $btn . "<a href='/prakitan/show-detail/$prakitan->no_prakitan' class='btn btn-secondary'><i class='align-middle' data-feather='eye'></i></a>";
+                    $btn = $btn . "<a href='/prakitan/detail-prakitan/print-pdf/$prakitan->no_prakitan' class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
+                    $btn = $btn . "<a href='/prakitan/show-detail/$prakitan->no_prakitan' class='btn btn-secondary mx-1'><i class='align-middle' data-feather='eye'></i></a>";
                 }
 
                 return $btn;

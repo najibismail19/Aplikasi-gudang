@@ -99,9 +99,12 @@
                           $("body").append(response.modal)
                       }
                   },
-                  error: (xhr,textStatus,thrownError) => {
-                      alert(xhr + "\n" + textStatus + "\n" + thrownError);
-                  }
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("Error Thrown: " + errorThrown);
+                        console.log("Text Status: " + textStatus);
+                        console.log("XMLHttpRequest: " + XMLHttpRequest);
+                        console.warn(XMLHttpRequest.responseText)
+                }
               });
         });
 

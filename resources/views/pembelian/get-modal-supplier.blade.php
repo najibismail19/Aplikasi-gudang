@@ -1,12 +1,10 @@
-<div class="modal fade" id="modalSupplier">
-    <div class="modal-lg modal-dialog">
+<div class="modal fade" id="modalSupplier" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-xl modal-dialog">
       <div class="modal-content">
-        <div class="modal-header  bg-info">
-          <h4 class="modal-title">Pilih Supplier</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Pilih Supplier</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
         <div class="modal-body bg-light">
             <div class="card-body pb-2">
                 <div class="table-responsive p-2">
@@ -22,6 +20,26 @@
                         <th>Action</th>
                       </tr>
                     </thead>
+                    <tbody>
+                        @foreach ($suppliers as $supplier)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $supplier->id_supplier }}</td>
+                                <td>{{ $supplier->nama }}</td>
+                                <td>{{ $supplier->kontak }}</td>
+                                <td>{{ $supplier->alamat }}</td>
+                                <td>{{ $supplier->deskripsi }}</td>
+                                <td><a class="pilihSupplier btn btn-primary mx-1"
+                                    data-id_supplier ="{{$supplier->id_supplier}}"
+                                    data-nama = "{{$supplier->nama}}"
+                                    data-kontak ="{{$supplier->kontak}}"
+                                    data-alamat = "{{$supplier->alamat}}"
+                                    data-deskripsi ="{{$supplier->deskripsi}}"
+                                    ><i class='align-middle' data-feather='check'></i>
+                                </a></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -35,55 +53,12 @@
     <!-- /.modal-dialog -->
   </div>
 <script>
+    feather.replace();
+
      $(function () {
-        var table = $('.data-supplier').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "/supplier",
-                type: "GET",
-                headers: {
-                    "X-SRC-Supplier":"Serach Supplier xxxx",
-                }
-            },
-            columns: [
-                {
-                    "data": 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'id_supplier',
-                    name: 'id_supplier'
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'kontak',
-                    name: 'kontak'
-                },
-                {
-                    data: 'alamat',
-                    name: 'alamat'
-                },
-                {
-                    data: 'deskripsi',
-                    name: 'deskripsi'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false
-                },
-            ],
-            drawCallback: function( settings ) {
-                feather.replace();
-            }
+        $('.data-supplier').DataTable({
         });
-});
+      });
 
 $(document).on("click", ".pilihSupplier", function (e) {
     e.preventDefault();

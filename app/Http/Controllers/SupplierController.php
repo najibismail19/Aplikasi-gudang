@@ -18,21 +18,15 @@ class SupplierController extends Controller
             return DataTables::of($supplier)
                     ->addIndexColumn()
                     ->addColumn('action', function($supplier){
-                        $icon = "check";
                         $btn = "";
-                        if(!request()->hasHeader("X-SRC-Supplier")) {
                             $btn = $btn ."<a id='$supplier->id_supplier' class='hapusSupplier btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
-                            $icon = "edit";
-                        }
-                        $actionClick = ($icon == 'edit') ? 'editSupplier' : 'pilihSupplier';
-
-                        $btn = $btn."<a class='$actionClick btn btn-primary mx-1'
-                            data-id_supplier ='$supplier->id_supplier'
-                            data-nama ='$supplier->nama'
-                            data-kontak ='$supplier->kontak'
-                            data-alamat ='$supplier->alamat'
-                            data-deskripsi ='$supplier->deskripsi'
-                            ><i class='align-middle' data-feather='$icon'></i></a>";
+                            $btn =  $btn . "<a class='editSupplier btn btn-primary mx-1'
+                                            data-id_supplier ='$supplier->id_supplier'
+                                            data-nama ='$supplier->nama'
+                                            data-kontak ='$supplier->kontak'
+                                            data-alamat ='$supplier->alamat'
+                                            data-deskripsi ='$supplier->deskripsi'
+                            ><i class='align-middle' data-feather='edit'></i></a>";
 
                             return $btn;
                     })

@@ -17,35 +17,32 @@
                         <button class="btn btn-warning px-3" id="export_excel">Excel</button>
                     </div>
                 </div>
-                <div class="row input_tanggal">
+                <div class="row input_tanggal searchAll">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tanggal Awal</label>
-                            <input type="date" class="form-control" id="tanggal_awal" aria-describedby="emailHelp" placeholder="Enter email">
+                            <input type="date" class="form-control" id="tanggal_awal" name="awal">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tanggal Akhir</label>
-                            <input type="date" class="form-control" id="tanggal_akhir" aria-describedby="emailHelp" placeholder="Enter email">
+                            <input type="date" class="form-control" id="tanggal_akhir" name="akhir">
                         </div>
-                    </div>
-                    <div class="col-md-3" style="margin-top: 1.9rem;">
-                        <button class="btn btn-secondary" id="reset">Reset</button>
-                        <button class="btn btn-primary" id="serachPembelian">Search</button>
                     </div>
                 </div>
                 <div class="table-responsive p-2">
-                  <table class="table table-striped  align-items-center mb-0 data-pembelian" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-pembelian" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
                         <th  style="width: 15%;">No Pembelian</th>
                         <th style="width: 15%;">Supplier</th>
                         <th>Tanggal</th>
-                        <th>Jumlah Produk</th>
+                        <th>Jumlah Jenis</th>
                         <th>Total harga</th>
                         <th>Karywan Input</th>
+                        <th>Status</th>
                         <th style="width: 12%; float:center;">Action</th>
                       </tr>
                     </thead>
@@ -96,12 +93,16 @@
                         name: 'total_produk'
                     },
                     {
-                        data: 'total_keseluruhan',
-                        name: 'total_keseluruhan'
+                        data: 'total_harga',
+                        name: 'total_harga'
                     },
                     {
                         data: 'karyawan',
                         name: 'karyawan.nama'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
                     },
                     {
                         data: 'action',
@@ -148,17 +149,64 @@
             validation("/pembelian/print/export-excel");
         });
 
-        $("#serachPembelian").on("click", function () {
-            validation(null, "search", function() {
-                $('.data-pembelian').DataTable().ajax.reload(null, false);
-            });
+
+
+        $(".searchAll input").each(function () {
+            if($(this).attr('type') == "date") {
+                $(this).on("change", function() {
+                    $('.data-pembelian').DataTable().ajax.reload(null, false);
+                });
+            } else {
+                $(this).on("keyup", function() {
+                    $('.data-pembelian').DataTable().ajax.reload(null, false);
+                });
+            }
         });
 
-        $("#reset").on("click", function () {
-            $("#tanggal_awal").val("");
-            $("#tanggal_akhir").val("");
 
-            $('.data-pembelian').DataTable().ajax.reload(null, false);
-        });
+        $(document).on("click",".deletePembelian", function () {
+            let btn = $(this);
+        Swal.fire({
+            title: 'Apakah Yakin Ingin  Menghapus?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
+                    url : "/pembelian/" + $(btn).attr("id"),
+                    type : "DELETE",
+                    dataType : "json",
+                    success: response => {
+                        if(response["success"]) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'success',
+                                text:  response["success"]
+                            });
+                            $('.data-pembelian').DataTable().ajax.reload(null, false);
+                        }
+                        if(response["error"]) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'error',
+                                text:  response["error"]
+                            });
+                            $('.data-pembelian').DataTable().ajax.reload(null, false);
+                        }
+                    },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("Error Thrown: " + errorThrown);
+                            console.log("Text Status: " + textStatus);
+                            console.log("XMLHttpRequest: " + XMLHttpRequest);
+                            console.warn(XMLHttpRequest.responseText)
+                    }
+                });
+            }
+            })
+    });
     </script>
 @endpush

@@ -17,6 +17,14 @@
                                     <input type="text" class="form-control" placeholder="No Penerimaan" value="{{ $prakitan->no_prakitan }}" readonly>
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Nama Karyawan Input</label>
+                                    <input type="text" class="form-control" placeholder="Nama Karyawan Input" value="{{ $prakitan->karyawan->nama }}" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Jabatan</label>
+                                    <input type="text" class="form-control" placeholder="Jabatan" value="{{ $prakitan->karyawan->jabatan->nama_jabatan }}" readonly>
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Kode Produk</label>
                                     <input type="text" class="form-control" placeholder="No Pembelian" value="{{ $prakitan->kode_produk }}" readonly>
                                 </div>
@@ -42,7 +50,7 @@
                             <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
                             <a href="/prakitan/detail-prakitan/print-pdf/{{ $prakitan->no_prakitan }}"class="btn btn-success mb-2">Download PDF</a>
                             <a href="/prakitan/detail-prakitan/download-excel/{{ $prakitan->no_prakitan }}"class="btn btn-warning mb-2">Download Excel</a>
-                            <table class="table table-striped align-items-center mb-0" style="width: 100%">
+                            <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
                                   <tr>
                                     <th  style="width: 15%;">Kode Produk</th>
@@ -64,11 +72,6 @@
                                             <td>{{ ($detail->quantity * $prakitan->qty_rencana) - ($detail->quantity * $prakitan->qty_hasil)}}</td>
                                         </tr>
                                     @endforeach
-                                    <tr rowSpan="2" style="font: bold; padding : 2rem; background-color: rgba(154, 194, 196, .8);">
-                                        <th colspan="4"></th>
-                                        <th></th>
-                                        <th id="table_total_keseluruhan" colspan="2"></th>
-                                    </tr>
                                 </tbody>
                               </table>
                               <div class="row mt-4">
@@ -79,11 +82,11 @@
                 </div>
             </div>
         </div>
-
 </div>
-
 @endsection
+
 @push('script')
-<script>
-</script>
+    <script>
+        feather.replace();
+    </script>
 @endpush

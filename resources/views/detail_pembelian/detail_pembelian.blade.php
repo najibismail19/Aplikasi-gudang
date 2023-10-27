@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-md-9">
                             <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
-                            <table class="table table-striped align-items-center mb-0" style="width: 100%">
+                            <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
                                   <tr>
                                     <th  style="width: 15%;">Kode Produk</th>
@@ -136,7 +136,7 @@
 										<td>`+value.kode_produk+`</td>
 										<td>`+value.nama_produk+`</td>
 										<td>`+ jenis +`</td>
-										<td>Rp. `+value.harga+`</td>
+										<td>Rp. `+ value.harga+`</td>
 										<td>`+value.jumlah+`</td>
 										<td>Rp. `+value.total_harga+`</td>
 										<td>
@@ -154,8 +154,11 @@
 				})
 
             },
-            error: function(xhr,textStatus,thrownError) {
-            alert(xhr + "\n" + textStatus + "\n" + thrownError);
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("Error Thrown: " + errorThrown);
+                    console.log("Text Status: " + textStatus);
+                    console.log("XMLHttpRequest: " + XMLHttpRequest);
+                    console.warn(XMLHttpRequest.responseText)
             }
         });
     }
@@ -167,6 +170,12 @@
         $("#ubah").hide();
         // $("#cancel").hide();
 // GET Modal Search Item
+
+// End Modal Search Item
+    });
+
+
+    $(document).on("click", "#searchProduk", function () {
         $.ajax({
             headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
             url : "/pembelian/get-modal-produk",
@@ -175,13 +184,13 @@
                 console.log(response);
                 if(response.success) {
                     $("body").append(response.modal);
+                    $("#modalProduk").modal("show");
                 }
             },
             error: function(xhr,textStatus,thrownError) {
             alert(xhr + "\n" + textStatus + "\n" + thrownError);
             }
         });
-// End Modal Search Item
     });
 
     $(document).on("click", "#tambah", function () {
@@ -248,8 +257,6 @@
         $("#tambah").hide();
         $("#ubah").show();
         $("#searchProduk").hide();
-        $(".search-produk").hide();
-
     });
 
     $(document).on("click", "#reset", function (e) {
@@ -400,6 +407,8 @@
         $("#searchProduk").show();
         $(".data_produk input").removeClass("is-invalid");
         $(".data_produk small").html("");
+        let form_produk = $(".data_produk");
+        $(form_produk).find("input").removeClass("is-invalid");
     }
 
 </script>

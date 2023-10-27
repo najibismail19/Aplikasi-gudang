@@ -34,34 +34,39 @@ class AuthController extends Controller
 
         if(Auth::guard('karyawan')->attempt($credentials)) {
             $request->session()->regenerate();
+
             $this->loginService->login();
+
+            if(Auth::guard("karyawan")->user()->jabatan->nama_jabatan == "Operator Prakitan") {
+                return redirect()->intended('/profile');
+            }
             return redirect()->intended('/dashboard');
         };
 
         return back();
     }
 
-    public function register() : Response
-    {
-        return response()->view("auth.register");
-    }
+    // public function register() : Response
+    // {
+    //     return response()->view("auth.register");
+    // }
 
-    public function doRegister(Request $request) : RedirectResponse
-    {
-        $karyawan = $request->validate([
-            'nik' => 'required|unique:karyawan',
-            'nama' => 'required',
-            'email' => 'required|unique:karyawan',
-            'password' => 'required',
-        ]);
-        $karyawan["password"] = Hash::make($request->input('password'));
-        $karyawan["id_jabatan"] = "J001";
-        $karyawan["id_gudang"] = "G001";
-        $query = Karyawan::insert($karyawan);
-        if($query) {
-            return redirect("/auth/login")->withSuccess('You have signed-in');
-        }
-    }
+    // public function doRegister(Request $request) : RedirectResponse
+    // {
+    //     $karyawan = $request->validate([
+    //         'nik' => 'required|unique:karyawan',
+    //         'nama' => 'required',
+    //         'email' => 'required|unique:karyawan',
+    //         'password' => 'required',
+    //     ]);
+    //     $karyawan["password"] = Hash::make($request->input('password'));
+    //     $karyawan["id_jabatan"] = "J001";
+    //     $karyawan["id_gudang"] = "G001";
+    //     $query = Karyawan::insert($karyawan);
+    //     if($query) {
+    //         return redirect("/auth/login")->withSuccess('You have signed-in');
+    //     }
+    // }
 
     public function logout(Request $request)
     {

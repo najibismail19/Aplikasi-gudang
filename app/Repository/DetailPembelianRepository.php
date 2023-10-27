@@ -9,6 +9,8 @@ interface DetailPembelianRepository {
 
     public function findByNoPembelian($no_pembelian);
 
+    // public function ByDateBetween($start, $end);
+
     public function allByNoPembelian($no_pembelian);
 
     public function findByNoPembelianKodeProduk($no_pembelian, $kode_produk);

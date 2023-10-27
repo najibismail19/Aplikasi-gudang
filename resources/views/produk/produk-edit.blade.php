@@ -6,7 +6,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form method="POST"  enctype="multipart/form-data" id="formEditProduk">
+            <form method="POST" action="/produk/update" enctype="multipart/form-data" id="formEditProduk">
                 <div class="mb-3">
                     <label for="kode_produk" class="form-label">Kode Produk*</label>
                     <input type="text" id="kode_produk" class="form-control" name="kode_produk" placeholder="Kode Produk" readonly>
@@ -85,11 +85,10 @@
 
                     $(document).on("submit", "#formEditProduk", function(e){
                         e.preventDefault();
-                                let kode_produk = $(this).find("#kode_produk").val();
                                 let form = this;
                                 $.ajax({
                                     headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-                                    url : "/produk/" + kode_produk,
+                                    url : $(this).attr("action"),
                                     method : $(this).attr("method"),
                                     enctype: 'multipart/form-data',
                                     async: false,
@@ -125,16 +124,19 @@
                                     },
                                     complete: () => {
                                     },
-                                    error: function(xhr,textStatus,thrownError) {
-                                    alert(xhr + "\n" + textStatus + "\n" + thrownError);
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        console.log("Error Thrown: " + errorThrown);
+                                        console.log("Text Status: " + textStatus);
+                                        console.log("XMLHttpRequest: " + XMLHttpRequest);
+                                        console.warn(XMLHttpRequest.responseText)
                                     }
                                 });
                         });
 
                         //  $("input[type=file][name=image]").val("");
-                        $("#formEditProduct").find("input[type=file][name=image]").val("");
-                         $("#formEditProduct input[type=file][name=image]").on("change", function () {
-                             var formEdit = $("#formEditProduct");
+                        $("#formEditProduk").find("input[type=file][name=gambar]").val("");
+                         $("#formEditProduk input[type=file][name=gambar]").on("change", function () {
+                             var formEdit = $("#formEditProduk");
                              var img_path = $(this)[0].value;
                              var img_holder = $(formEdit).find(".img-holder");
                              var extension = img_path.substring(img_path.lastIndexOf(".") + 1).toLowerCase();
@@ -156,4 +158,9 @@
                                  $(img_holder).empty();
                              }
                          });
+
+
+            $(document).ready(function () {
+                $('input').attr('autocomplete', 'off');
+            })
     </script>

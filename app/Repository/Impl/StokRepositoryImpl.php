@@ -5,6 +5,7 @@ use App\Models\Stok;
 use App\Repository\StokRepository;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\DataTables;
+use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -52,5 +53,13 @@ Class StokRepositoryImpl implements StokRepository {
         Stok::where("id_gudang", $id_gudang)->where("kode_produk", $kode_produk)->update($array);
     }
 
+    public function ByDescStok($id_gudang = null, $row)
+    {
+        return Stok::select("*")->with(["produk"])->where(function(Builder $builder) use ($id_gudang){
+            if(trim($id_gudang) != "") $builder->where("id_gudang", $id_gudang);
+         })
+         ->take($row)
+         ->get();
+    }
 }
 

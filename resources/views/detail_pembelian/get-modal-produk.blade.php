@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
             <div class="table-responsive p-2">
-                <table class="table align-items-center mb-0 data-produk" style="width: 100%">
+                <table class="table align-items-center mb-0 search-produk" style="width: 100%">
                   <thead>
                     <tr>
                       <th style="width: 5%;">No</th>
@@ -21,6 +21,28 @@
                       <th>Action</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    @foreach ($produk as $p)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$p->kode_produk}}</td>
+                        <td>{{$p->nama}}</td>
+                        <td>{{$p->harga}}</td>
+                        <td>{{($p->jenis == 0) ? "Barang Mentah" : "Barang Jadi"}}</td>
+                        <td>
+                            <a class="pilihProduk btn btn-primary mx-1"
+                                        data-kode-produk="{{$p->kode_produk}}"
+                                        data-nama="{{$p->nama}}"
+                                        data-satuan="{{$p->satuan}}"
+                                        data-harga="{{$p->harga}}"
+                                        data-jenis="{{$p->jenis}}"
+                                        data-gambar="{{$p->gambar}}"
+                                        data-deskripsi="{{$p->deskripsi}}"
+                                    ><i class="align-middle" data-feather="check"></i></a>
+                        </td>
+                    </tr>
+                    @endforeach
+                  </tbody>
                 </table>
               </div>
         </div>
@@ -33,55 +55,10 @@
   </div>
 
 <script>
-    $(function () {
-        var table = $('.data-produk').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-                url: "/produk",
-                type: "GET",
-                headers: {
-                    "X-SRC-Produk":"Serach Produk xxxx",
-                }
-        },
-        columns: [
-            {
-                "data": 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'kode_produk',
-                name: 'kode_produk'
-            },
-            {
-                data: 'nama',
-                name: 'nama'
-            },
-            {
-                data: 'satuan',
-                name: 'satuan'
-            },
-            {
-                data: 'jenis',
-                name: 'jenis'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-        ],
-        drawCallback: function( settings ) {
-            feather.replace();
-        }
-    });
-    });
-
-    $(document).on("click", "#searchProduk", function () {
-        $("#modalProduk").modal("show");
-    });
+    feather.replace();
+        $(function () {
+            $('.search-produk').DataTable();
+        });
 
     $(document).on("click", ".pilihProduk", function () {
         let kode_produk = $(this).attr("data-kode-produk");

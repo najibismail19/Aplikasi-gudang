@@ -8,30 +8,27 @@ use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\DataTables;
 
 class MasterPrakitanRepositoryImpl implements MasterPrakitanRepository{
-    public function getDatatable(): JsonResponse
-    {
 
+    public function getAll()
+    {
         $groupProduk = MasterPrakitan::select("kode_produk_jadi")->groupBy("kode_produk_jadi")->get();
         $kode_produk = [];
         foreach($groupProduk as $produk) {
             array_push($kode_produk, $produk->kode_produk_jadi);
         }
 
-        $data = Produk::select("*")->whereIn("kode_produk", $kode_produk)->get();
-        return DataTables::of($data)
+        return Produk::select("*")->whereIn("kode_produk", $kode_produk)->get();
+    }
+
+    public function getDatatable(): JsonResponse
+    {
+        return DataTables::of($this->getAll())
             ->addIndexColumn()
             ->editColumn('jenis_produk', function (Produk $produk) {
                 return ($produk->jenis == 1) ? "Barang Jadi" : "Barang Mentah";
             })
             ->addColumn('action', function($produk){
-
-                $btn = "<a class='btn btn-secondary mx-1' id='$produk->kode_produk'><i class='align-middle' data-feather='eye'></i></a>";
-
-                if(request()->hasHeader("X-SRC-MTR-Prakitan")){
-                    return "<a class='btn btn-primary mx-1' id='pilihMasterPrakitan' data-kode_produk='$produk->kode_produk' data-nama_produk='$produk->nama'><i class='align-middle' data-feather='check'></i></a>";
-                };
-
-                return $btn;
+                return "<a class='btn btn-secondary mx-1' id='$produk->kode_produk'><i class='align-middle' data-feather='eye'></i></a>";
             })
             ->rawColumns(['action'])
             ->make(true);

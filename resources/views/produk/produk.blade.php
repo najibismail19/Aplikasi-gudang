@@ -12,7 +12,7 @@
               </div>
               <div class="card-body pb-2">
                 <div class="table-responsive p-2">
-                  <table class="table align-items-center mb-0 data-produk" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-produk" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
@@ -80,6 +80,7 @@
                 }
             });
         });
+
 
         $(document).ready(function () {
             $.ajax({
@@ -157,6 +158,22 @@
                 }
             })
         });
+        });
+
+
+        $(document).on("click", ".showImage", function () {
+            let image = $(this).attr("data-image");
+            let nama = $(this).attr("data-nama");
+            let kode_produk = $(this).attr("data-kode_produk");
+            let file = (image != "") ? image : "default.png";
+            Swal.fire({
+                title: kode_produk,
+                text: nama,
+                imageUrl: '/storage/photos/produk/' + file,
+                imageWidth: 500,
+                imageHeight: 300,
+                imageAlt: 'Custom image',
+            })
         });
     </script>
 @endpush

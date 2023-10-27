@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DetailPembelianCreateRequest;
 use App\Repository\DetailPembelianRepository;
 use App\Repository\PembelianRepository;
+use App\Repository\ProdukRepository;
 use App\Rules\DupplicateProduk;
+use App\Rules\DupplicateProdukPembelian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Closure;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -20,11 +23,15 @@ class DetailPembelianController extends Controller
 
     private DetailPembelianRepository $detailPembelian;
 
-    public function __construct(PembelianRepository $pembelian, DetailPembelianRepository $detailPembelian) {
+    private ProdukRepository $produk;
+
+    public function __construct(PembelianRepository $pembelian, DetailPembelianRepository $detailPembelian, ProdukRepository $produk) {
 
         $this->pembelian = $pembelian;
 
         $this->detailPembelian = $detailPembelian;
+
+        $this->produk = $produk;
 
     }
 
@@ -70,7 +77,9 @@ class DetailPembelianController extends Controller
     public function getModalProduk(Request $request)
     {
         if($request->ajax()) {
-            $view = view('detail_pembelian.get-modal-produk')->render();
+            $view = view('detail_pembelian.get-modal-produk',[
+                "produk" => $this->produk->getAll()
+            ])->render();
             return response()->json( array('success' => true, 'modal'=> $view));
         }
     }
@@ -80,7 +89,11 @@ class DetailPembelianController extends Controller
         try {
             $validation = $request->validate([
                 "no_pembelian" => "required",
-                "kode_produk" => "required", new DupplicateProduk(),
+                "kode_produk" =>["required", function (string $attributes, string $value, Closure $fail) use ($request) {
+                    if($this->detailPembelian->findByNoPembelianKodeProduk($request->input("no_pembelian"), $value)){
+                         $fail("Produk Sudah Tersedia");
+                    }
+                }],
                 "harga" => "required|numeric|min:0|not_in:0",
                 "jumlah" => "required|numeric|min:0|not_in:0",
                 "total_harga" => "required|numeric|min:0|not_in:0"
@@ -212,7 +225,7 @@ class DetailPembelianController extends Controller
         return response()->view("detail_pembelian.show_detail_pembelian", [
             "pembelian" => $pembelian,
             "details" => $details,
-            "tanggal_pembelian" => Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('dddd, D MMMM Y')
+            "tanggal_pembelian" => Carbon::parse($pembelian->tanggal_pembelian)->isoFormat('D MMMM Y')
         ]);
     }
 }

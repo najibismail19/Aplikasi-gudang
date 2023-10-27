@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         table tr td {
             font-size: 13px;
@@ -19,10 +18,25 @@
             text-align : right;
             font-size: 13px;
         }
+
+        .table.data {
+            border: 1px solid black;
+        }
+
+        .table.data .tr td {
+            border: 1px solid black;
+        }
+
+        .table.data th {
+            border: 1px solid black;
+        }
+
+        .title table {
+            font-size: 13px;
+        }
         .table tr td {
             padding: .1cm;
         }
-
         .table tr th {
             padding: .1cm;
         }
@@ -30,7 +44,7 @@
 </head>
 <body>
     <center>
-        <table width="550">
+        <table style="width: 18.5cm;">
             <tr>
                 <td>
                     <center>
@@ -40,7 +54,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><hr></td>
+                <td colspan="2"><hr style="border: 1px solid black;"></td>
             </tr>
         </table>
         {{-- <table width="550">
@@ -64,9 +78,14 @@
                             <td width="100"> {{ $tanggal_penerimaan }}</td>
                         </tr>
                         <tr>
-                            <td width="100">Nama Penerimaan</td>
+                            <td width="100">Nama Penerima</td>
                             <td>:</td>
                             <td width="100"> {{ $penerimaan->karyawan->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td width="100">Lokasi Gudang</td>
+                            <td>:</td>
+                            <td width="100"> {{ $penerimaan->karyawan->gudang->nama_gudang }}</td>
                         </tr>
                     </table>
                 </td>
@@ -87,18 +106,24 @@
                             <td>:</td>
                             <td width="100"> {{ $pembelian->supplier->nama }}</td>
                         </tr>
+                        <tr>
+                            <td width="100">Alamat</td>
+                            <td>:</td>
+                            <td width="100"> {{ $pembelian->supplier->alamat }}</td>
+                        </tr>
                     </table>
                 </td>
             </tr>
         </table>
         <br>
-        <table border="1" class='table' style="font-size: 9pt; width: 18.5cm;">
+        <table class='table data' cellspacing="0" style="font-size: 9pt; width: 18.5cm;">
 			<thead>
-				<tr style="background-color: #dedede;">
+				<tr style="background-color: #fffafa;">
 					<th>No</th>
 					<th>Kode Produk</th>
 					<th>Nama</th>
 					<th>Jenis</th>
+					<th>Satuan</th>
 					<th>Harga</th>
 					<th>Jumlah</th>
 					<th>Total Harga</th>
@@ -106,20 +131,21 @@
 			</thead>
 			<tbody>
                 @foreach ($detail_penerimaan as $detail)
-                    <tr>
+                    <tr class="tr">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $detail->kode_produk }}</td>
                         <td>{{ $detail->produk->nama }}</td>
                         <td>{{ ($detail->jenis == 0) ? "Barang Mentah" : "Barang Jadi" }}</td>
+                        <td>{{ $detail->produk->satuan }}</td>
                         <td>{{ "Rp. " . number_format($detail->harga) }}</td>
                         <td>{{ $detail->jumlah }}</td>
                         <td>{{ "Rp. " . number_format($detail->total_harga) }}</td>
                     </tr>
                 @endforeach
-                <tr rowSpan="2" style="font: bold; background-color: rgba(154, 194, 196, .8);">
-                    <th colspan="4"></th>
+                <tr rowSpan="2" style="font: bold; background-color: #fffafa;">
+                    <th colspan="5"></th>
                     <th colspan="2">Total</th>
-                    <th id="table_total_keseluruhan" colspan="2">{{ "Rp. " . number_format($penerimaan->pembelian->total_keseluruhan) }}</th>
+                    <th id="table_total_keseluruhan" colspan="1">{{ "Rp. " . number_format($penerimaan->pembelian->total_keseluruhan) }}</th>
                 </tr>
 			</tbody>
 		</table>

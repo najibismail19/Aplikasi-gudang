@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         table tr td {
             font-size: 13px;
@@ -19,10 +18,25 @@
             text-align : right;
             font-size: 13px;
         }
+
+        .table.data {
+            border: 1px solid black;
+        }
+
+        .table.data .tr td {
+            border: 1px solid black;
+        }
+
+        .table.data th {
+            border: 1px solid black;
+        }
+
+        .title table {
+            font-size: 13px;
+        }
         .table tr td {
             padding: .1cm;
         }
-
         .table tr th {
             padding: .1cm;
         }
@@ -30,7 +44,7 @@
 </head>
 <body>
     <center>
-        <table width="550">
+        <table style="width: 18.5cm;">
             <tr>
                 <td>
                     <center>
@@ -40,7 +54,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><hr></td>
+                <td colspan="2"><hr style="border: 1px solid black;"></td>
             </tr>
         </table>
         {{-- <table width="550">
@@ -59,6 +73,16 @@
                             <td width="100"> {{ $prakitan->no_prakitan }}</td>
                         </tr>
                         <tr>
+                            <td width="100">Karyawan Input</td>
+                            <td>:</td>
+                            <td width="100"> {{ $prakitan->karyawan->nama }}</td>
+                        </tr>
+                        <tr>
+                            <td width="100">Jabatan</td>
+                            <td>:</td>
+                            <td width="100"> {{ $prakitan->karyawan->jabatan->nama_jabatan }}</td>
+                        </tr>
+                        <tr>
                             <td width="100">Tanggal Rencana</td>
                             <td>:</td>
                             <td width="100"> {{ $tanggal_rencana }}</td>
@@ -67,11 +91,6 @@
                             <td width="100">Qty Rencana</td>
                             <td>:</td>
                             <td width="100"> {{ $prakitan->qty_rencana }}</td>
-                        </tr>
-                        <tr>
-                            <td width="100">Karyawan Input</td>
-                            <td>:</td>
-                            <td width="100"> {{ $prakitan->karyawan->nama }}</td>
                         </tr>
                     </table>
                 </td>
@@ -88,21 +107,26 @@
                             <td width="100"> {{ $prakitan->produk->nama }}</td>
                         </tr>
                         <tr>
+                            <td width="100">Qty Hasil</td>
+                            <td>:</td>
+                            <td width="100"> {{ $prakitan->qty_hasil }}</td>
+                        </tr>
+                        <tr>
                             <td width="100">Tanggal Actual</td>
                             <td>:</td>
                             <td width="100"> {{ $tanggal_actual }}</td>
                         </tr>
                         <tr>
-                            <td width="100">Qty Hasil</td>
+                            <td width="100">Gudang</td>
                             <td>:</td>
-                            <td width="100"> {{ $prakitan->qty_hasil }}</td>
+                            <td width="100"> {{ $prakitan->karyawan->gudang->nama_gudang }}</td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
         <br>
-        <table border="1" class='table' style="font-size: 9pt; width: 18.5cm;">
+        <table class='table data' cellspacing="0" style="font-size: 9pt; width: 18.5cm;">
 			<thead>
 				<tr style="background-color: #dedede;">
 					<th>No</th>
@@ -116,7 +140,7 @@
 			</thead>
 			<tbody>
                 @foreach ($detail_prakitan as $detail)
-                    <tr>
+                    <tr class="tr"
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $detail->kode_produk_mentah }}</td>
                         <td>{{ $detail->produk_mentah->nama }}</td>

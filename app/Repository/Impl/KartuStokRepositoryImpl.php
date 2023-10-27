@@ -53,7 +53,7 @@ Class KartuStokRepositoryImpl implements KartuStokRepository {
                 return ($kartuStok->produk->jenis == 0) ? "Barang Mentah" : "Barang Jadi";
             })
             ->editColumn('tanggal', function (KartuStok $kartuStok) {
-                return Carbon::parse($kartuStok->tanggal)->isoFormat('dddd, D MMMM Y');
+                return Carbon::parse($kartuStok->tanggal)->isoFormat('D MMMM Y');
             })
             ->editColumn('nama_produk', function (KartuStok $kartuStok) {
                 return $kartuStok->produk->nama;

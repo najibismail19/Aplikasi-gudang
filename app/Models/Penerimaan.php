@@ -18,6 +18,15 @@ class Penerimaan extends Model
 
     protected $guarded = [];
 
+    public function scopeFilter($query, array $filter)
+    {
+        $query->when($filter["awal"] ?? false, function ($query) use ($filter) {
+            $query->when($filter["akhir"] ?? false, function ($query) use ($filter) {
+                return $query->whereBetween('tanggal_penerimaan', [$filter["awal"], $filter["akhir"]]);
+            });
+        });
+    }
+
     public function karyawan() : BelongsTo
     {
         return $this->belongsTo(Karyawan::class, "nik", "nik");
