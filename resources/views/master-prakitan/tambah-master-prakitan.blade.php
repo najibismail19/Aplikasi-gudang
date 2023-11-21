@@ -119,7 +119,6 @@
 @push('script')
 
     <script>
-      feather.replace();
         $(function () {
             $("#btn-action-produk").find("#ubah-master-prakitan").hide();
             // $(".data-detail-prakitan").hide();

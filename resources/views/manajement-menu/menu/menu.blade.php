@@ -1,26 +1,25 @@
 @extends('template.template')
 
 @section('title')
-    Master Prakitan
+    Menu
 @endsection
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
               <div class="card-header">
-                <a href="{{ url("/master-prakitan/tambah-master-prakitan") }}" class="btn btn-success"> <i class="align-middle" data-feather="plus"></i>&nbsp;Tambah Master Prakitan</a>
+                <a href="{{ url("/pembelian/tambah-pembelian") }}" class="btn btn-success" style="float: right;"> <i class="align-middle" data-feather="plus"></i>&nbsp;Add Pembelian</a>
               </div>
               <div class="card-body pb-2">
                 <div class="table-responsive p-2">
-                  <table class="table table-bordered table-striped align-items-center mb-0 data-master-prakitan" style="width: 100%">
+                  <table class="table table-bordered table-striped align-items-center mb-0 data-menu" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 5%;">No</th>
-                        <th  style="width: 15%;">Kode Produk</th>
-                        <th style="width: 15%;">Nama</th>
-                        <th>Satuan</th>
-                        <th>Jenis Produk</th>
-                        <th>Action</th>
+                        <th  style="width: 15%;">ID Menu</th>
+                        <th style="width: 15%;">Nama Menu</th>
+                        <th>Icon</th>
+                        <th style="width: 12%; float:center;">Action</th>
                       </tr>
                     </thead>
                   </table>
@@ -37,10 +36,10 @@
     <script>
           $(function () {
 
-            var table = $('.data-master-prakitan').DataTable({
+            var table = $('.data-menu').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/master-prakitan",
+                ajax: "/manajement-menu/user-menu/get-data",
                 columns: [
                     {
                         "data": 'DT_RowIndex',
@@ -48,20 +47,16 @@
                         searchable: false
                     },
                     {
-                        data: 'kode_produk',
-                        name: 'produk.kode_produk'
+                        data: 'menu_id',
+                        name: 'menu_id'
                     },
                     {
                         data: 'nama',
-                        name: 'produk.nama'
+                        name: 'nama'
                     },
                     {
-                        data: 'satuan',
-                        name: 'produk.satuan'
-                    },
-                    {
-                        data: 'jenis_produk',
-                        name: 'jenis_produk'
+                        data: 'icon',
+                        name: 'icon'
                     },
                     {
                         data: 'action',

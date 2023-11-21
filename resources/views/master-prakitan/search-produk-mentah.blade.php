@@ -21,6 +21,27 @@
                       <th>Action</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    @foreach ($produk_mentah as $p)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $p->kode_produk }}</td>
+                            <td>{{ $p->nama }}</td>
+                            <td>{{ $p->satuan }}</td>
+                            <td>{{ "Barang Mentah" }}</td>
+                            <td>
+                                <a  data-kode-produk='{{$p->kode_produk}}'
+                                    data-nama='{{$p->nama}}'
+                                    data-satuan='{{$p->satuan}}'
+                                    data-harga='{{$p->harga}}'
+                                    data-jenis='{{$p->jenis}}'
+                                    data-gambar='{{$p->gambar}}'
+                                    data-deskripsi='{{$p->deskripsi}}' 
+                                class="btn btn-success pilihProdukMentah"><i class="fas fa-check"></i>Pilih</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                  </tbody>
                 </table>
               </div>
         </div>
@@ -36,46 +57,6 @@
     $(function () {
         var table = $('.data-detail-produk-mentah').DataTable({
         processing: true,
-        serverSide: true,
-        ajax: {
-                url: "/produk",
-                type: "GET",
-                headers: {
-                    "X-SRC-PRK-Produk":"P-M",
-                }
-        },
-        columns: [
-            {
-                "data": 'DT_RowIndex',
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'kode_produk',
-                name: 'kode_produk'
-            },
-            {
-                data: 'nama',
-                name: 'nama'
-            },
-            {
-                data: 'satuan',
-                name: 'satuan'
-            },
-            {
-                data: 'jenis',
-                name: 'jenis'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            },
-        ],
-        drawCallback: function( settings ) {
-            feather.replace();
-        }
     });
     });
 

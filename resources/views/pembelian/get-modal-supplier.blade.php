@@ -29,13 +29,13 @@
                                 <td>{{ $supplier->kontak }}</td>
                                 <td>{{ $supplier->alamat }}</td>
                                 <td>{{ $supplier->deskripsi }}</td>
-                                <td><a class="pilihSupplier btn btn-primary mx-1"
+                                <td><a class="btn btn-primary mx-1" id="pilihSupplier"
                                     data-id_supplier ="{{$supplier->id_supplier}}"
                                     data-nama = "{{$supplier->nama}}"
                                     data-kontak ="{{$supplier->kontak}}"
                                     data-alamat = "{{$supplier->alamat}}"
                                     data-deskripsi ="{{$supplier->deskripsi}}"
-                                    ><i class='align-middle' data-feather='check'></i>
+                                    ><i class='fas fa-eye'></i>
                                 </a></td>
                             </tr>
                         @endforeach
@@ -53,14 +53,13 @@
     <!-- /.modal-dialog -->
   </div>
 <script>
-    feather.replace();
 
      $(function () {
         $('.data-supplier').DataTable({
         });
       });
 
-$(document).on("click", ".pilihSupplier", function (e) {
+$(document).on("click", "#pilihSupplier", function (e) {
     e.preventDefault();
     let id_supplier = $(this).attr("data-id_supplier");
     let nama = $(this).attr("data-nama");

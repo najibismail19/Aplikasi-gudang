@@ -12,9 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_menu', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('nama');
+            $table->string('menu_id',100)->nullable(false);
+            $table->string('nama', 100)->nullable(false);
+            $table->string('icon', 100)->nullable(false);
             $table->timestamps();
+
+            $table->primary(["menu_id"]);
         });
     }
 

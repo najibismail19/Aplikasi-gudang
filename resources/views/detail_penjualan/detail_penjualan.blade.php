@@ -48,7 +48,7 @@
                                   </div>
                                   <div class="mb-3">
                                     <label for="harga" class="form-label">Harga</label>
-                                    <input type="number" class="form-control" id="harga" placeholder="Harga" readonly>
+                                    <input type="text" class="form-control" id="harga" placeholder="Harga" readonly>
                                     <small class="text-danger error_text harga_error"></small>
                                   </div>
                                   <div class="mb-3">

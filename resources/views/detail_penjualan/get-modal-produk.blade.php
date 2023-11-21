@@ -28,7 +28,7 @@
                                 <td id="nama">{{ $p->nama }}</td>
                                 <td id="jenis">{{ ( $p->jenis == 0 ) ? "Barang Mentah" : "Baranag Jadi"}}</td>
                                 <td id="satuan">{{ $p->satuan }}</td>
-                                <td id="harga">{{ 'Rp '.number_format($p->harga, 0, ',', '.'); }}</td>
+                                <td id="harga">{{$p->harga}}</td>
                                 <td>
                                   <a id="pilihProduk" class="btn btn-success">
                                       Pilih
@@ -50,9 +50,6 @@
     <!-- /.modal-dialog -->
   </div>
 <script>
-
-    feather.replace();
-
      $(function () {
         $('.data-products').DataTable();
       });

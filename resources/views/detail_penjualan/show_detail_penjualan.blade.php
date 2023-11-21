@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="row justify-content-between bg-light" style="margin-top: 2rem; padding-top: 2rem;">
                         <div class="col-md-3">
-                            <div class="row justify-content-center">
+                            {{-- <div class="row justify-content-center">
                                 <h2 class="mb-2">Data Penjualan</h2>
                                 <div class="mb-3">
                                     <label class="form-label">No Penjualan</label>
@@ -36,14 +36,59 @@
                                     <label class="form-label">Jabatan</label>
                                     <input type="text" class="form-control" placeholder="Jabatan Karyawan" value="{{ $penjualan->karyawan->jabatan->nama_jabatan }}" readonly>
                                   </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
-                            <a href="/penjualan/print/detail-penjualan/print-pdf/{{ $penjualan->no_penjualan }}"class="btn btn-success mb-2">Download PDF</a>
-                            <a href="/penjualan/detail-prakitan/export-excel/{{ $penjualan->no_penjualan }}"class="btn btn-warning mb-2">Download Excel</a>
+                            </div> --}}
+
                             <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
+                                    <tr>
+                                        <th colspan="2" style="text-align: center;">Penjualan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>No Penjualan</td>
+                                        <td>{{ $penjualan->no_penjualan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal</td>
+                                        <td>{{ $tanggal_penjualan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Customer</td>
+                                        <td>{{ $penjualan->customer->nama }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alamat</td>
+                                        <td>{{ $penjualan->customer->alamat }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Karyawan Input</td>
+                                        <td>{{ $penjualan->karyawan->nama }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jabatan</td>
+                                        <td>{{ $penjualan->karyawan->jabatan->nama_jabatan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alamat Gudang</td>
+                                        <td>{{ $penjualan->karyawan->gudang->nama_gudang }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cetak</td>
+                                        <td>
+                                            <a href="/penjualan/print/detail-penjualan/print-pdf/{{ $penjualan->no_penjualan }}"class="btn btn-success mb-2">PDF</a>
+                                            <a href="/penjualan/detail-prakitan/export-excel/{{ $penjualan->no_penjualan }}"class="btn btn-warning mb-2">Excel</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-9">
+                            <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th colspan="8" style="text-align: center;">Detail Penjualan</th>
+                                    </tr>
                                   <tr>
                                     <th>No</th>
                                     <th  style="width: 15%;">Kode Produk</th>
@@ -75,9 +120,7 @@
                                         <th id="table_total_keseluruhan" colspan="2">{{ "Rp. " . number_format($penjualan->total_keseluruhan) }}</th>
                                     </tr>
                                 </tbody>
-                              </table>
-                              <div class="row mt-4">
-                              </div>
+                            </table>
                         </div>
                     </div>
 

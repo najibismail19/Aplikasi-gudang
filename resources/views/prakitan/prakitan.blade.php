@@ -111,10 +111,7 @@ var table = $('.data-prakitan').DataTable({
             orderable: false,
             searchable: false
         },
-    ],
-    drawCallback: function( settings ) {
-        feather.replace();
-    }
+    ]
 });
 });
 

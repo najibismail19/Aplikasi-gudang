@@ -38,7 +38,7 @@
                                         data-jenis="{{$p->jenis}}"
                                         data-gambar="{{$p->gambar}}"
                                         data-deskripsi="{{$p->deskripsi}}"
-                                    ><i class="align-middle" data-feather="check"></i></a>
+                                    ><i class="fas fa-check"></i></a>
                         </td>
                     </tr>
                     @endforeach
@@ -55,7 +55,6 @@
   </div>
 
 <script>
-    feather.replace();
         $(function () {
             $('.search-produk').DataTable();
         });

@@ -57,13 +57,13 @@ Class PenjualanRepositoryImpl implements PenjualanRepository{
 
 
             if($penjualan->status_penjualan == true) {
-                $btn = $btn . "<a class='btn btn-secondary mx-1' href='/penjualan/show-detail/$penjualan->no_penjualan'><i class='align-middle' data-feather='eye'></i></a>";
-                $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' href='/penjualan/print/detail-penjualan/print-pdf/$penjualan->no_penjualan' id='$penjualan->no_pembelian'><i class='align-middle' data-feather='printer'></i></a>";
+                $btn = $btn . "<a class='btn btn-secondary mx-1' href='/penjualan/show-detail/$penjualan->no_penjualan'><i class=' fas fa-eye'></i></a>";
+                $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' href='/penjualan/print/detail-penjualan/print-pdf/$penjualan->no_penjualan' id='$penjualan->no_pembelian'><i class='fas fa-print'></i></a>";
             }
             if($penjualan->status_penjualan == false) {
                 if($penjualan->karyawan->nik == getNik()) {
-                    $btn = $btn . "<a class='btn btn-primary mx-1' href='/penjualan/$penjualan->no_penjualan'><i class='align-middle' data-feather='edit'></i></a>";
-                    $btn = $btn . "<a class='hapusPenjualan btn btn-danger mx-1' id='$penjualan->no_penjualan'><i class='align-middle' data-feather='trash'></i></a>";
+                    $btn = $btn . "<a class='btn btn-primary mx-1' href='/penjualan/$penjualan->no_penjualan'><i class=' fas fa-edit'></i></a>";
+                    $btn = $btn . "<a class='hapusPenjualan btn btn-danger mx-1' id='$penjualan->no_penjualan'><i class=' fas fa-trash'></i></a>";
                 } else {
                     $btn = $btn . "<span class='badge bg-danger'>Sedang Process</span>";
                 }

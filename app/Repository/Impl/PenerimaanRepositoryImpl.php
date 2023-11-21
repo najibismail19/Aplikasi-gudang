@@ -35,8 +35,8 @@ Class PenerimaanRepositoryImpl implements PenerimaanRepository {
                                 return Carbon::parse($penerimaan->tanggal_penerimaan)->isoFormat('D MMMM Y');
                             })
                             ->addColumn('action', function($penerimaan){
-                                $btn = "<a class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
-                                $btn = $btn . "<a class='btn btn-secondary mx-1' href='/penerimaan/show-detail/$penerimaan->no_penerimaan'><i class='align-middle' data-feather='eye'></i></a>";
+                                $btn = "<a class='btn btn-info'><i class='fas fa-print'></i></a>";
+                                $btn = $btn . "<a class='btn btn-secondary mx-1' href='/penerimaan/show-detail/$penerimaan->no_penerimaan'><i class='fas fa-eye'></i></a>";
                                 return $btn;
                             })
                             ->rawColumns(['action'])

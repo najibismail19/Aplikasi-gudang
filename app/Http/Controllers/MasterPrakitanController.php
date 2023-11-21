@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Produk;
 use App\Repository\MasterPrakitanRepository;
 use App\Rules\DupplicateMasterPrakitan;
 use Illuminate\Http\JsonResponse;
@@ -36,7 +37,9 @@ class MasterPrakitanController extends Controller
     function getModalProdukJadi(Request $request)
     {
         if($request->ajax()) {
-            $view = view('master-prakitan.search-produk-jadi')->render();
+            $view = view('master-prakitan.search-produk-jadi', [
+                "produk_jadi" => Produk::where("jenis", true)->get()
+            ])->render();
             return response()->json( array('success' => true, 'modal'=> $view));
         }
     }
@@ -44,7 +47,9 @@ class MasterPrakitanController extends Controller
     function getModalProdukMentah(Request $request)
     {
         if($request->ajax()) {
-            $view = view('master-prakitan.search-produk-mentah')->render();
+            $view = view('master-prakitan.search-produk-mentah', [
+                "produk_mentah" => Produk::where("jenis", false)->get()
+            ])->render();
             return response()->json( array('success' => true, 'modal'=> $view));
         }
     }
@@ -155,5 +160,13 @@ class MasterPrakitanController extends Controller
 
             return response()->json(["success" => true]);
         }
+    }
+
+    public function show($kode_produk) 
+    {
+        return response()->view("master-prakitan.show", [
+            "produk_detail" => $this->masterPrakitan->getDetailMasterIsActive($kode_produk),
+            "produk" => Produk::find($kode_produk)
+        ]);
     }
 }

@@ -9,8 +9,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="row justify-content-between bg-light" style="margin-top: 2rem; padding-top: 2rem;">
-                        <div class="col-md-3">
-                            <div class="row justify-content-center">
+                        <div class="col-md-4">
+                            {{-- <div class="row justify-content-center">
                                 <h2 class="mb-2">Data Penerimaan</h2>
                                 <div class="mb-3">
                                     <label class="form-label">No Penerimaan</label>
@@ -36,14 +36,73 @@
                                     <label class="form-label">Total Harga</label>
                                     <input type="text" class="form-control" placeholder="Total Harga" value="{{ $penerimaan->pembelian->total_keseluruhan }}" readonly>
                                   </div>
-                            </div>
+                            </div> --}}
+                            <table class="table table-bordered table-striped align-items-center mb-3" style="width: 100%">
+                                <thead>
+                                <tr>
+                                    <th colspan="2" style="text-align: center">Penerimaan</th>
+                                </tr>
+                                </thead>
+                                <tbody id="data-detail-pembelian">
+                                    <tr>
+                                       <td>No Penerimaan</td>
+                                       <td>{{ $penerimaan->no_penerimaan }}</td>
+                                    </tr>
+                                    <tr>
+                                       <td>Tanggal</td>
+                                       <td>{{ $tanggal_penerimaan }}</td>
+                                    </tr>
+                                    <tr>
+                                       <td>Penerima/Karyawan</td>
+                                       <td>{{ $penerimaan->karyawan->nama }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jabatan</td>
+                                        <td>{{ $penerimaan->karyawan->jabatan->nama_jabatan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Karyawan</td>
+                                        <td>{{ $penerimaan->karyawan->gudang->nama_gudang }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cetak</td>
+                                        <td>
+                                            <a href="/penerimaan/detail-penerimaan/print-pdf/{{ $penerimaan->no_penerimaan }}"class="btn btn-success mb-2">PDF</a>
+                                            <a href="/penerimaan/detail-penerimaan/download-excel/{{ $penerimaan->no_penerimaan }}"class="btn btn-warning mb-2">Excel</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-9">
-                            <h2 style="margin-bottom: 2rem;">Detail Penerimaan</h2>
-                            <a href="/penerimaan/detail-penerimaan/print-pdf/{{ $penerimaan->no_penerimaan }}"class="btn btn-success mb-2">Download PDF</a>
-                            <a href="/penerimaan/detail-penerimaan/download-excel/{{ $penerimaan->no_penerimaan }}"class="btn btn-warning mb-2">Download Excel</a>
+                        <div class="col-md-8">
+                            <table class="table table-bordered table-striped align-items-center mb-3" style="width: 100%">
+                                <thead>
+                                <tr>
+                                    <th colspan="5" style="text-align: center">Pembelian Yang diterima</th>
+                                </tr>
+                                  <tr>
+                                    <th  style="width: 15%;">No Pembelian</th>
+                                    <th style="width: 15%;">Supplier</th>
+                                    <th>Tanggal</th>
+                                    <th>Karyawan</th>
+                                    <th>Gudang</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="data-detail-pembelian">
+                                    <tr>
+                                        <td>{{ $penerimaan->no_pembelian }}</td>
+                                        <td>{{ $penerimaan->pembelian->supplier->nama }}</td>
+                                        <td>{{ $penerimaan->pembelian->tanggal_pembelian }}</td>
+                                        <td>{{ $penerimaan->pembelian->karyawan->nama }}</td>
+                                        <td>{{ $penerimaan->pembelian->karyawan->gudang->nama_gudang }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                             <table class="table table-bordered table-striped align-items-center mb-0" style="width: 100%">
                                 <thead>
+                                <tr>
+                                    <th colspan="6" style="text-align: center">Detail Penerimaan</th>
+                                </tr>
                                   <tr>
                                     <th  style="width: 15%;">Kode Produk</th>
                                     <th style="width: 15%;">Nama</th>
@@ -70,9 +129,7 @@
                                         <th id="table_total_keseluruhan" colspan="2">{{ "Rp. " . number_format($penerimaan->pembelian->total_keseluruhan) }}</th>
                                     </tr>
                                 </tbody>
-                              </table>
-                              <div class="row mt-4">
-                              </div>
+                            </table>
                         </div>
                     </div>
 

@@ -29,8 +29,8 @@ class ProdukRepositoryImpl implements ProdukRepository{
                                         data-image='$produk->gambar'
                                         data-kode_produk='$produk->kode_produk'
                                         data-nama='$produk->nama'
-                     class='showImage btn btn-success mx-1'><i class='align-middle' data-feather='image'></i></a>";
-                    $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+                     class='showImage btn btn-success mx-1'><i class='fas fa-eye'></i></a>";
+                    $btn = $btn ."<a id='$produk->kode_produk' class='hapusProduk btn btn-danger'><i class='fas fa-trash'></i></a>";
                     $btn = $btn. "<a class='editProduk btn btn-primary mx-1'
                         data-kode-produk='$produk->kode_produk'
                         data-nama='$produk->nama'
@@ -39,7 +39,7 @@ class ProdukRepositoryImpl implements ProdukRepository{
                         data-jenis='$produk->jenis'
                         data-gambar='$produk->gambar'
                         data-deskripsi='$produk->deskripsi'
-                    ><i class='align-middle' data-feather='edit'></i></a>";
+                    ><i class='fas fa-edit'></i></a>";
 
                     return $btn;
                 })

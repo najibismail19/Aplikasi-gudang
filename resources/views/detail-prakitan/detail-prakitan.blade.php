@@ -83,9 +83,6 @@
 @endsection
 @push('script')
 <script>
-
-    feather.replace();
-
     $("#qty_hasil").on("keyup", function () {
          $("#data-detail-prakitan tr").each(function () {
             let tr = $(this);

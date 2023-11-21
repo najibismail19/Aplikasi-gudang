@@ -28,7 +28,7 @@ class MasterPrakitanRepositoryImpl implements MasterPrakitanRepository{
                 return ($produk->jenis == 1) ? "Barang Jadi" : "Barang Mentah";
             })
             ->addColumn('action', function($produk){
-                return "<a class='btn btn-secondary mx-1' id='$produk->kode_produk'><i class='align-middle' data-feather='eye'></i></a>";
+                return "<a href='/master-prakitan/$produk->kode_produk'class='btn btn-secondary mx-1' id='$produk->kode_produk'><i class='fas fa-eye'></i></a>";
             })
             ->rawColumns(['action'])
             ->make(true);

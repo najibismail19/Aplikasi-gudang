@@ -41,7 +41,7 @@
             var table = $('.data-stok-produk-mentah').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/stok/barang-mentah",
+                ajax: "/stok-barang-mentah",
                 columns: [
                     {
                         "data": 'DT_RowIndex',
@@ -72,10 +72,7 @@
                         data: 'jenis_produk',
                         name: 'jenis_produk'
                     },
-                ],
-                drawCallback: function( settings ) {
-                    feather.replace();
-                }
+                ]
             });
         });
     </script>

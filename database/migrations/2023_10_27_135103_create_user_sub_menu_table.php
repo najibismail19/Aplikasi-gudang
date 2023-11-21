@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_sub_menu', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('menu_id');
+            $table->string('sub_menu_id', 100)->nullable(false);
+            $table->string('menu_id', 100)->nullable(false);
             $table->string("title", 100)->nullable(false);
             $table->string("url", 100)->nullable(false);
             $table->string("icon", 100)->nullable(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('menu_id')->references('id')->on('user_menu');
+            $table->primary(["sub_menu_id"]);
+            $table->foreign('menu_id')->references('menu_id')->on('user_menu');
         });
     }
 

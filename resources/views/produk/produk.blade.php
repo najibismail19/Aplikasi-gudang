@@ -36,9 +36,8 @@
 
 @push('script')
     <script>
-          $(function () {
-
-            var table = $('.data-produk').DataTable({
+        $(document).ready(function () {
+            $('.data-produk').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "/produk",
@@ -74,12 +73,11 @@
                         orderable: false,
                         searchable: false
                     },
-                ],
-                drawCallback: function( settings ) {
-                    feather.replace();
-                }
+                ]
             });
         });
+
+
 
 
         $(document).ready(function () {
@@ -176,4 +174,5 @@
             })
         });
     </script>
+
 @endpush

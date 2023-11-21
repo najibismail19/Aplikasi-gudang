@@ -87,6 +87,5 @@
 
 @push('script')
     <script>
-        feather.replace();
     </script>
 @endpush

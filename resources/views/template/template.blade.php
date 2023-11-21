@@ -38,11 +38,10 @@
   <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 {{-- End Data Table --}}
 
-
 {{-- Sweet Alert --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{-- Feater Icons --}}
-  <script src="https://unpkg.com/feather-icons"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -111,218 +110,74 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-               <li class="nav-header">Profie</li>
-               <li class="nav-item">
-                   <a href="{{ url("/profile") }}" class="nav-link {{ Request::is("profile") ? 'active' : ''}}">
-                    <i class="fas fa-user mr-2"></i>
-                    <p>
-                      Profile
-                    </p>
-                  </a>
-               </li>
-               <li class="nav-header">Dashboard</li>
-               <li class="nav-item">
-                   <a href="{{ url("/dashboard") }}" class="nav-link {{ Request::is("dashboard") ? 'active' : ''}}">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                      Dashboard
-                    </p>
-                  </a>
-               </li>
-            <li class="nav-header">Transaksi</li>
-            @can('management_users')
-                <li class="nav-item {{ Request::is("users") || Request::is("users/*") ? 'menu-open' : ''}}">
-                <a href="#" class="nav-link {{ Request::is("users") || Request::is("users/*") ? 'active' : ''}}">
-                    <i class="fas fa-users mr-2"></i>
-                    <p>
-                    Users
-                    <i class="right fas fa-angle-left"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="{{ url("/users") }}" class="nav-link {{ Request::is("users") ? 'active' : ''}}">
-                        <i class="far fa-circle nav-icon mr-2"></i>
-                        <p>List User</p>
-                    </a>
-                    </li>
-                    <li class="nav-item ">
-                    <a href="{{ url("/users/log-authentication") }}" class="nav-link {{ Request::is("users/log-authentication") ? 'active' : ''}}">
-                        <i class="far fa-circle nav-icon mr-2"></i>
-                        <p>Log Authentication</p>
-                    </a>
-                    </li>
-                    {{-- <li class="nav-item">
-                    <a href="{{ url("/users/users-activity") }}" class="nav-link {{ Request::is("users/users-activity") ? 'active' : ''}}">
-                        <i class="far fa-circle nav-icon mr-2"></i>
-                        <p>User Activity</p>
-                    </a>
-                    </li> --}}
-                </ul>
-                </li>
-            @endcan
-          <li class="nav-item {{  (request()->is("produk") || request()->is("produk/*")) ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ (request()->is("produk") || request()->is("produk/*")) ? 'active' : ''}}">
-                <i data-feather="inbox"></i>&nbsp;
-              <p>
-                Master Produk
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item ">
-                <a href="{{ url("/produk") }}" class="nav-link {{ (request()->is("produk") || request()->is("produk/*")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Produk</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+               <li class="nav-header">Menu</li>
 
-        @php
-            $canAccess = Gate::allows('pembelian') || Gate::allows('penerimaan') || Gate::allows('penjualan');
-        @endphp
-        @if ($canAccess)
-            <li class="nav-item {{ (request()->is("pembelian") || request()->is("pembelian/*") || request()->is("penerimaan") || request()->is("penerimaan/*") || request()->is("penjualan") || request()->is("penjualan/*")) ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ (request()->is("pembelian") || request()->is("pembelian/*") || request()->is("penerimaan") || request()->is("penerimaan/*") || request()->is("penjualan") || request()->is("penjualan/*")) ? 'active' : ''}}">
-                <i data-feather="archive"></i>&nbsp;
-                <p>
-                Transaksi
-                <i class="right fas fa-angle-left"></i>
-                </p>
-            </a>
-            <ul class="nav nav-treeview">
-                @can('pembelian')
-                    <li class="nav-item ">
-                        <a href="{{ url("/pembelian") }}" class="nav-link {{ (request()->is("pembelian") || request()->is("pembelian/*")) ? 'active' : ''}}">
-                            <i class="far fa-circle nav-icon mr-2"></i>
-                            <p>Pembelian</p>
-                        </a>
-                    </li>
-                @endcan
-                @can('penerimaan')
-                    <li class="nav-item ">
-                        <a href="{{ url("/penerimaan") }}" class="nav-link {{ (request()->is("penerimaan") || request()->is("penerimaan/*")) ? 'active' : ''}}">
-                            <i class="far fa-circle nav-icon mr-2"></i>
-                            <p>Penerimaan</p>
-                        </a>
-                    </li>
-                @endcan
-                @can('penjualan')
-                    <li class="nav-item ">
-                        <a href="{{ url("/penjualan") }}" class="nav-link {{ Request::is("penjualan/*") ? 'active' : ''}}">
-                            <i class="far fa-circle nav-icon mr-2"></i>
-                            <p>Penjualan</p>
-                        </a>
-                    </li>
-                @endcan
-            </ul>
-            </li>
-        @endif
 
-        @can('prakitan')
-            @if (Request::is("prakitan/*") || Request::is("prakitan") || Request::is("master-prakitan/*") || Request::is("master-prakitan"))
-                <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-            @else
-                <li class="nav-item">
-                <a href="#" class="nav-link">
-            @endif
-                <i class="fas fa-solid fa-sitemap mr-2"></i>
-                <p>
-                    Perakitan
-                    <i class="right fas fa-angle-left"></i>
-                </p>
-                </a>
-                <ul class="nav nav-treeview">
-                <li class="nav-item ">
-                    <a href="{{ url("master-prakitan") }}" class="nav-link {{ (Request::is("master-prakitan/*") || Request::is("master-prakitan")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Master Perakitan</p>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a href="{{ url("/prakitan") }}" class="nav-link {{ (Request::is("prakitan/*") || Request::is("prakitan")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Perakitan</p>
-                    </a>
-                </li>
-                </ul>
-            </li>
-          @endcan
-          <li class="nav-item {{ (Request::is("stok/*") || Request::is("stok") || Request::is("kartu-stok/*") || Request::is("kartu-stok")) ? 'menu-open' : ''}}">
-            <a href="#" class="nav-link {{ (Request::is("stok/*") || Request::is("stok") || Request::is("kartu-stok/*") || Request::is("kartu-stok")) ? 'active' : ''}}">
-                <i data-feather="check-square"></i>&nbsp;
-              <p>
-                Master Stock
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item ">
-                <a href="{{ url("/stok/barang-jadi") }}" class="nav-link {{ (Request::is("stok/barang-jadi/*") || Request::is("stok/barang-jadi")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Stcok Barang Jadi</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a href="{{ url("/stok/barang-mentah") }}" class="nav-link {{ (Request::is("stok/barang-mentah/*") || Request::is("stok/barang-mentah")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Stock Barang Mentah</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a href="{{ url("/kartu-stok") }}" class="nav-link {{ (Request::is("kartu-stok/*") || Request::is("kartu-stok")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Kartu Stock</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-             @php
-                $canAccessSupplier = Gate::allows('pembelian');
-            @endphp
-            @if ($canAccessSupplier)
-            <li class="nav-item {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'menu-open' : ''}}">
-              <a href="#" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
-                  <i data-feather="truck"></i>&nbsp;
-                <p>
-                  Supplier
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item ">
-                  <a href="{{ url("/supplier") }}" class="nav-link {{ (request()->is("supplier") || request()->is("supplier/*")) ? 'active' : ''}}">
-                    <i class="far fa-circle nav-icon mr-2"></i>
-                    <p>Supplier</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            @endif
-            @php
-                $canAccessCustomer = Gate::allows('penjualan');
-            @endphp
-        @if ($canAccessCustomer)
-            <li class="nav-item {{ (request()->is("customers") || request()->is("customers/*")) ? 'menu-open' : ''}}">
-                <a href="#" class="nav-link {{ (request()->is("customers") || request()->is("customers/*")) ? 'active' : ''}}">
-                    <i data-feather="users"></i>&nbsp;
-                  <p>
-                    Customers
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item ">
-                    <a href="{{ url("/customers") }}" class="nav-link {{ (request()->is("customers") || request()->is("customers/*")) ? 'active' : ''}}">
-                      <i class="far fa-circle nav-icon mr-2"></i>
-                      <p>Customers</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              @endif
+
+                @php
+                    $distinctAkses = DB::table('user_access_menu')
+                                            ->join('user_sub_menu', 'user_sub_menu.sub_menu_id', '=', 'user_access_menu.sub_menu_id')
+                                            ->select('user_sub_menu.menu_id')
+                                            ->where("user_access_menu.id_jabatan", Auth::guard("karyawan")->user()->jabatan->id_jabatan)
+                                            ->distinct()
+                                            ->get();
+                                          
+                    $menuAll = DB::table("user_menu")->get();
+                @endphp
+          @foreach ($menuAll as $menu)
+                @foreach ($distinctAkses as $akses)
+                    @if ($menu->menu_id == $akses->menu_id)
+                    @php
+                          $subMenu = DB::table('user_sub_menu')
+                            ->join('user_access_menu', 'user_sub_menu.sub_menu_id', '=', 'user_access_menu.sub_menu_id')
+                            ->select('user_sub_menu.*')
+                            ->where("user_access_menu.id_jabatan", Auth::guard("karyawan")->user()->jabatan->id_jabatan)
+                            ->get();
+
+
+
+                        // foreach ($subMenu as $s) {
+                        //   $pattern =  "#^" . $s->url . "$#";
+                        //   if (preg_match($pattern, "/" . request()->segment(1), $variasbels)) {
+                        //       $menuOpen="menu-open";
+                        //   } 
+                        // }
+
+
+                    @endphp
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="{{ $menu->icon }}"></i>&nbsp;
+                          <p>
+                            {{ $menu->nama }}
+                            <i class="right fas fa-angle-left"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @foreach ($subMenu as $list)
+                                @if ($list->menu_id == $menu->menu_id)
+                                  <li class="nav-item">
+                                    @php
+                                          $pattern =  "#^" . $list->url . "$#";
+                                          $actv = "";
+                                          if (preg_match($pattern, "/" . request()->segment(1), $variabels)) {
+                                            $actv = "active";
+                                          }
+                                    @endphp
+                                    <a href="{{ url($list->url) }}" class="nav-link {{ $actv }}">
+                                        <i class="{{ $list->icon }}"></i>
+                                        <p>{{ $list->title }} </p>
+                                    </a>
+                                  </li>
+                                @endif
+                            @endforeach
+
+                        </ul>
+                      </li>
+                    @endif
+                @endforeach
+          @endforeach
+
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

@@ -17,7 +17,7 @@ Class CustomerRepositoryImpl implements CustomerRepository{
                 ->addColumn('action', function($customer){
                     $btn = "";
 
-                    $btn = $btn ."<a id='$customer->id_customer' class='hapusCustomer btn btn-danger mx-2'><i class='align-middle' data-feather='trash'></i></a>";
+                    $btn = $btn ."<a id='$customer->id_customer' class='hapusCustomer btn btn-danger mx-2'><i class='fas fa-trash'></i></a>";
 
                     $btn = $btn ."<a id='$customer->id_customer'
                                         data-id_customer='{$customer->id_customer}'
@@ -26,7 +26,7 @@ Class CustomerRepositoryImpl implements CustomerRepository{
                                         data-alamat='{$customer->alamat}'
                                         data-email='{$customer->email}'
                                         data-deskripsi='{$customer->deskripsi}'
-                    class='editCustomer btn btn-primary'><i class='align-middle' data-feather='edit'></i></a>";
+                    class='editCustomer btn btn-primary'><i class='fas fa-edit'></i></a>";
 
                     return $btn;
                 })

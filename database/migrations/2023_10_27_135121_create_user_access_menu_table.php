@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('user_access_menu', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string("id_jabatan", 200)->nullable(false);
-            $table->unsignedBigInteger('sub_menu_id');
+            $table->string('sub_menu_id', 100)->nullable(false);
 
 
             $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatan');
-            $table->foreign('sub_menu_id')->references('id')->on('user_sub_menu');
+            $table->foreign('sub_menu_id')->references('sub_menu_id')->on('user_sub_menu');
         });
     }
 

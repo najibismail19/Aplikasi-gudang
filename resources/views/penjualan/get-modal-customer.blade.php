@@ -50,9 +50,6 @@
     <!-- /.modal-dialog -->
   </div>
 <script>
-
-    feather.replace();
-
      $(function () {
         $('.data-customer').DataTable({
         });

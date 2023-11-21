@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
         $result = DB::table($table)
              ->select(DB::raw('substr(no_'. $table .', 4, 6) as no, no_' . $table))
              ->where(DB::raw('substr(no_' . $table . ', 4, 6)'), "=", $time)
+             ->orderBy("create_at", "desc")
              ->first();
         if($result != null) {
             $get_colum = "no_" . $table;
@@ -75,5 +76,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
+    }
+
+
+    function checkUrl($subMenu) {
+        foreach($subMenu as $m) {
+        $urlFull = $m->url;
+        $arrUrl = explode('/', $urlFull);
+        if(request()->segment(1) == $arrUrl[1]) {
+        return "menu-open";
+        }
+    }
     }
 ?>

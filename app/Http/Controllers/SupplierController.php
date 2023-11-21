@@ -19,14 +19,14 @@ class SupplierController extends Controller
                     ->addIndexColumn()
                     ->addColumn('action', function($supplier){
                         $btn = "";
-                            $btn = $btn ."<a id='$supplier->id_supplier' class='hapusSupplier btn btn-danger'><i class='align-middle' data-feather='trash'></i></a>";
+                            $btn = $btn ."<a id='$supplier->id_supplier' class='hapusSupplier btn btn-danger'><i class='fas fa-trash'></i></a>";
                             $btn =  $btn . "<a class='editSupplier btn btn-primary mx-1'
                                             data-id_supplier ='$supplier->id_supplier'
                                             data-nama ='$supplier->nama'
                                             data-kontak ='$supplier->kontak'
                                             data-alamat ='$supplier->alamat'
                                             data-deskripsi ='$supplier->deskripsi'
-                            ><i class='align-middle' data-feather='edit'></i></a>";
+                            ><i class='fas fa-edit'></i></a>";
 
                             return $btn;
                     })

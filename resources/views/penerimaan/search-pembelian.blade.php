@@ -28,7 +28,7 @@
                                 <td>{{ $p->tanggal_pembelian }}</td>
                                 <td>{{ $p->total_keseluruhan }}</td>
                                 <td>{{ $p->karyawan->nama }}</td>
-                                <td><a class='pilihPembelian btn btn-primary mx-1' id={{ $p->no_pembelian }}><i class='align-middle' data-feather='check'></i></a></td>
+                                <td><a class='pilihPembelian btn btn-primary mx-1' id={{ $p->no_pembelian }}><i class='fas fa-check'></i></a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -44,7 +44,6 @@
 <script>
 
         $(function () {
-            feather.replace();
             $('.search-pembelian').DataTable({
             });
          });

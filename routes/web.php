@@ -17,6 +17,7 @@ use App\Http\Controllers\Laporan\LaporanPenerimaanController;
 use App\Http\Controllers\Laporan\LaporanDetailPenjualanController;
 use App\Http\Controllers\Laporan\LaporanPenjualanController;
 use App\Http\Controllers\Laporan\LaporanPrakitanController;
+use App\Http\Controllers\ManajementMenuController;
 use App\Http\Controllers\MasterPrakitanController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PenerimaanController;
@@ -66,7 +67,23 @@ Route::middleware(['auth:karyawan', 'rules_access'])->group(function () {
     Route::get("/profile", [UserController::class, "profile"]);
     Route::get("/users", [UserController::class, "listUsers"]);
     Route::post("/users", [UserController::class, "store"]);
+    Route::delete("/users/{nik}", [UserController::class, "delete"]);
     Route::post("/users/update", [UserController::class, "update"]);
+    
+    // Manajement Menu
+    Route::get("/manajement-menu/user-menu/get-data", [ManajementMenuController::class, "getDataMenu"]);
+    Route::get("/manajement-menu/user-menu", [ManajementMenuController::class, "menu"]);
+    
+    
+    // Manajement Sub Menu
+    Route::get("/manajement-menu/user-sub-menu/get-data", [ManajementMenuController::class, "getDataSubMenu"]);
+    Route::get("/manajement-menu/user-sub-menu", [ManajementMenuController::class, "subMenu"]);
+
+    // Manajement Sub Menu
+    Route::get("/manajement-menu/user-access-menu", [ManajementMenuController::class, "userAccessMenu"]);
+    Route::post("/manajement-menu/user-access-menu", [ManajementMenuController::class, "storeUserAccessMenu"]);
+    Route::get("/manajement-menu/user-access-menu/{id_jabatan}", [ManajementMenuController::class, "showUserAccessMenu"]);
+    Route::delete("/manajement-menu/user-access-menu", [ManajementMenuController::class, "removeUserAccessMenu"]);
 
 
 
@@ -127,8 +144,8 @@ Route::middleware(['auth:karyawan', 'rules_access'])->group(function () {
     Route::get("/kartu-stok", [KartuStokController::class, "index"]);
 
     // Stok
-    Route::get("/stok/barang-jadi", [StokController::class, "barangJadi"]);
-    Route::get("/stok/barang-mentah", [StokController::class, "barangMentah"]);
+    Route::get("/stok-barang-jadi", [StokController::class, "barangJadi"]);
+    Route::get("/stok-barang-mentah", [StokController::class, "barangMentah"]);
 
     // Master Prakitan
     Route::get("/master-prakitan", [MasterPrakitanController::class, "index"]);
@@ -141,6 +158,7 @@ Route::middleware(['auth:karyawan', 'rules_access'])->group(function () {
     Route::post("/master-prakitan/detail-master-prakitan/update", [MasterPrakitanController::class, "update"]);
     Route::delete("/master-prakitan/{kode_produk_jadi}/produk/{kode_produk_mentah}", [MasterPrakitanController::class, "delete"]);
     Route::post("/master-prakitan/store", [MasterPrakitanController::class, "storeAll"]);
+    Route::get("/master-prakitan/{kode_produk}", [MasterPrakitanController::class, "show"]);
 
     // Prakitan
     Route::get("/prakitan", [PrakitanController::class, "index"]);

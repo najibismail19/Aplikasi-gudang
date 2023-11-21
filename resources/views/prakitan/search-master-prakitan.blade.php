@@ -30,7 +30,7 @@
                             <td>{{ $produk->satuan }}</td>
                             <td>{{ ($produk->jenis == 0 ) ? "Barang Mentah" : "Barang Jadi" }}</td>
                             <td>
-                                <a class='btn btn-primary mx-1' id='pilihMasterPrakitan' data-kode_produk='{{$produk->kode_produk}}' data-nama_produk='{{$produk->nama}}' data-satuan='{{ $produk->satuan }}'><i class='align-middle' data-feather='check'></i></a>
+                                <a class='btn btn-primary mx-1' id='pilihMasterPrakitan' data-kode_produk='{{$produk->kode_produk}}' data-nama_produk='{{$produk->nama}}' data-satuan='{{ $produk->satuan }}'><i class='fas fa-check'></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -47,8 +47,6 @@
   </div>
 
 <script>
-feather.replace();
-
 $(document).on("click", "#searchMasterPrakitan", function () {
     // alert("berhasil!!!");
     $("#modalMasterPrakitan").modal("show");

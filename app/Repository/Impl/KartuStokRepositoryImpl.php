@@ -13,7 +13,7 @@ Class KartuStokRepositoryImpl implements KartuStokRepository {
 
     public function getDatatable() : JsonResponse
     {
-        $data = KartuStok::select("*")->with(["produk", "gudang"]);
+        $data = KartuStok::select("*")->with(["produk", "gudang"])->orderBy("tanggal", "asc");
         return DataTables::of($data)
             ->addIndexColumn()
 

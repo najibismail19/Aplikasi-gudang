@@ -83,19 +83,16 @@ class DetailPrakitanController extends Controller
                                     "saldo_awal" => $kartu_stock->saldo_akhir,
                                     "stock_in" => $cek_qty,
                                     "stock_out" => 0,
-                                    "saldo_akhir" => DB::raw("saldo_awal - $cek_qty"),
+                                    "saldo_akhir" => DB::raw("saldo_awal + $cek_qty"),
                                     "deskripsi" => "Pengembalin prakitan"
                                 ];
 
                             $this->kartuStok->insert($dataKartuStok);
-
+                                
+                            $this->stok->update(getIdGudang(), $detail->kode_produk_mentah, [
+                                "stok" => DB::raw("stok + $cek_qty")
+                            ]);
                         }
-
-
-                        $this->stok->update(getIdGudang(), $detail->kode_produk_mentah, [
-                            "stok" => DB::raw("stok + $cek_qty")
-                        ]);
-
 
                         }
 
@@ -129,7 +126,7 @@ class DetailPrakitanController extends Controller
                                         "stock_in" => $request->input("qty_hasil"),
                                         "stock_out" => 0,
                                         "saldo_akhir" => DB::raw("saldo_awal + stock_in"),
-                                        "deskripsi" => ""
+                                        "deskripsi" => "Hasil Prakitan"
                                     ];
                                 $this->kartuStok->insert($dataKartuStok);
                             } else {
@@ -141,7 +138,7 @@ class DetailPrakitanController extends Controller
                                     "stock_in" => $request->input("qty_hasil"),
                                     "stock_out" => 0,
                                     "saldo_akhir" => $request->input("qty_hasil"),
-                                    "deskripsi" => ""
+                                    "deskripsi" => "Hasil Prakitan"
                                 ];
                             $this->kartuStok->insert($dataKartuStok);
                             }

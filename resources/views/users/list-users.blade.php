@@ -7,11 +7,11 @@
         <div class="col-12">
             <div class="card mb-4">
               <div class="card-header">
-                    <a class="btn btn-success" id="addUser"> <i class="align-middle" data-feather="plus"></i>&nbsp;Add User</a>
+                    <a class="btn btn-success" id="addUser"><i class="align-middle" data-feather="plus"></i>&nbsp;Add User</a>
               </div>
               <div class="card-body pb-2">
                 <div class="table-responsive p-2">
-                  <table class="table align-items-center mb-0 data-user-activity" style="width: 100%">
+                  <table class="table align-items-center mb-0 data-users" style="width: 100%">
                     <thead>
                       <tr>
                         <th style="width: 7%;">No</th>
@@ -21,11 +21,9 @@
                         <th>Kontak</th>
                         <th>Alamat</th>
                         <th>Jabatan</th>
+                        <th>Action</th>
                       </tr>
                     </thead>
-                    <tbody id="data-users">
-
-                    </tbody>
                   </table>
                 </div>
               </div>
@@ -45,7 +43,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="/users" id="formAddUser">
+            <form method="POST" action="{{ url("/users") }}" id="formAddUser">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="kode_produk" class="form-label">NIK*</label>
@@ -126,78 +124,138 @@
   </div>
 
 @push('script')
+    {{-- <script>
+
+      
+    </script> --}}
+
     <script>
+    $(document).on("click", "#addUser", function () {
+        $("#modalAddUser").modal("show");
+    });
 
-        getDataUsers();
+    $(document).ready(function () {
+            $('.data-users').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/users",
+                columns: [
+                    {
+                        "data": 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'nik',
+                        name: 'nik'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'id_gudang',
+                        name: 'id_gudang'
+                    },
+                    {
+                        data: 'kontak',
+                        name: 'kontak'
+                    },
+                    {
+                        data: 'alamat',
+                        name: 'alamat'
+                    },
+                    {
+                        data: 'id_jabatan',
+                        name: 'id_jabatan'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                ]
+            });
+        });
 
-        feather.replace();
 
-        function getDataUsers() {
+$(document).on("submit", "#formAddUser", function(e){
+   
+  e.preventDefault();
+  let form = $(this);
         $.ajax({
             headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-            url : "/users",
+            url : $(form).attr("action"),
+            method : $(form).attr("method"),
+            data : $(form).serialize(),
             dataType : "json",
-            success: response => {
-                console.log(response.data);
-                $("#data-users tr").remove();
-                $.each(response.data.reverse(), function (key, value) {
-							$('#data-users').prepend(`<tr>
-                                        <td>`+value.number+`</td>
-                                        <td>`+value.nik+`</td>
-										<td>`+value.nama+`</td>
-										<td>`+ value.gudang +`</td>
-										<td>`+value.kontak +`</td>
-										<td>` + value.alamat +`</td>
-										<td>` + value.jabatan +`</td>
-                                    </tr>`);
-				})
+            success: data => {
+              console.log(data);
+                if(data.error) {
+                    $.each(data.error, function (prefix, val) {
+                        $(form).find("small." + prefix + "_error").text(val[0]);
+                        $(form).find("#"+ prefix + "").addClass("is-invalid");
+                    })
+                }
+                if(data.success){
+                    $("#modalAddUser").modal("hide");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text:  data.success,
+                    })
 
+                    $('.data-users').DataTable().ajax.reload(null, false);
+                }
             },
             error: function(xhr,textStatus,thrownError) {
             alert(xhr + "\n" + textStatus + "\n" + thrownError);
             }
         });
-    }
 
+        
+});
 
+$(document).on('click', '.hapusKaryawan', function() {
+            var nik = $(this).attr('id');
+            Swal.fire({
+                title: 'Yakin Ingin Menghapus?',
+                text: "Hapus karyawan " + nik,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
+                        url: "/users/" + nik,
+                        type: "DELETE",
+                        success: response => {
 
-        $("#addUser").on("click", function () {
-            $("#modalAddUser").modal("show");
-        });
-
-
-        $(document).on("submit", "#formAddUser", function(e){
-                e.preventDefault();
-                let form = this;
-                $.ajax({
-                    headers: { 'X-CSRF-Token' : $('meta[name=csrf-token]').attr('content') },
-                    url : $(this).attr("action"),
-                    method : $(this).attr("method"),
-                    data : $(this).serialize(),
-                    dataType : "json",
-                    success: data => {
-                        console.log(data);
-                        if(data.error) {
-                            $.each(data.error, function (prefix, val) {
-                                $(form).find("small." + prefix + "_error").text(val[0]);
-                                $(form).find("#"+ prefix + "").addClass("is-invalid");
-                            })
-                        }
-                        if(data.success){
-                            $("#modalAddUser").modal("hide");
+                            if(response.success) {
                                 Swal.fire({
-                                    icon: 'success',
-                                    title: 'success',
-                                    text:  data.success,
+                                icon: 'success',
+                                title: 'success',
+                                text:  response["success"],
                             })
+                                 $('.data-users').DataTable().ajax.reload(null, false);
+                            }
 
-                            getDataUsers();
+                            if(response.error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'error',
+                                    text:  response["error"],
+                                })
+                                    $('.data-users').DataTable().ajax.reload(null, false);
+                            }
                         }
-                    },
-                    error: function(xhr,textStatus,thrownError) {
-                    alert(xhr + "\n" + textStatus + "\n" + thrownError);
-                    }
-                });
+                    });
+                }
+            })
         });
-    </script>
+</script>
 @endpush

@@ -13,6 +13,7 @@ use App\Repository\Impl\DetailPenerimaanRepositoryImpl;
 use App\Repository\Impl\DetailPenjualanRepositoryImpl;
 use App\Repository\Impl\DetailPrakitanRepositoryImpl;
 use App\Repository\Impl\KartuStokRepositoryImpl;
+use App\Repository\Impl\ManajementMenuRepositoryImpl;
 use App\Repository\Impl\MasterPrakitanRepositoryImpl;
 use App\Repository\Impl\PembelianRepositoryImpl;
 use App\Repository\Impl\PenerimaanRepositoryImpl;
@@ -21,6 +22,7 @@ use App\Repository\Impl\PrakitanRepositoryImpl;
 use App\Repository\Impl\ProdukRepositoryImpl;
 use App\Repository\Impl\StokRepositoryImpl;
 use App\Repository\KartuStokRepository;
+use App\Repository\ManajementMenuRepository;
 use App\Repository\MasterPrakitanRepository;
 use App\Repository\PembelianRepository;
 use App\Repository\PenerimaanRepository;
@@ -46,7 +48,8 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
         DetailPrakitanRepository::class => DetailPrakitanRepositoryImpl::class,
         PenjualanRepository::class => PenjualanRepositoryImpl::class,
         DetailPenjualanRepository::class => DetailPenjualanRepositoryImpl::class,
-        CustomerRepository::class => CustomerRepositoryImpl::class
+        CustomerRepository::class => CustomerRepositoryImpl::class,
+        ManajementMenuRepository::class => ManajementMenuRepositoryImpl::class
     ];
     /**
      * Register services.
@@ -79,7 +82,8 @@ class RepositoryServiceProvider extends ServiceProvider implements DeferrablePro
             DetailPrakitanRepository::class,
             PenjualanRepository::class,
             DetailPenjualanRepository::class,
-            CustomerRepository::class
+            CustomerRepository::class,
+            ManajementMenuRepository::class
         ];
     }
 }

@@ -51,11 +51,11 @@ Class PrakitanRepositoryImpl implements PrakitanRepository{
 
                 if($prakitan->tanggal_actual_prakitan == null && $prakitan->qty_hasil == null) {
                     if($prakitan->nik == getNik()) {
-                        $btn = $btn . "<a href='/prakitan/$prakitan->no_prakitan' class='btn btn-primary'><i class='align-middle' data-feather='edit'></i></a>";
+                        $btn = $btn . "<a href='/prakitan/$prakitan->no_prakitan' class='btn btn-primary'><i class='fas fa-edit'></i></a>";
                     }
                 } else {
-                    $btn = $btn . "<a href='/prakitan/detail-prakitan/print-pdf/$prakitan->no_prakitan' class='btn btn-info'><i class='align-middle' data-feather='printer'></i></a>";
-                    $btn = $btn . "<a href='/prakitan/show-detail/$prakitan->no_prakitan' class='btn btn-secondary mx-1'><i class='align-middle' data-feather='eye'></i></a>";
+                    $btn = $btn . "<a href='/prakitan/detail-prakitan/print-pdf/$prakitan->no_prakitan' class='btn btn-info'><i class='fas fa-printer'></i></a>";
+                    $btn = $btn . "<a href='/prakitan/show-detail/$prakitan->no_prakitan' class='btn btn-secondary mx-1'><i class='fas fa-eye'></i></a>";
                 }
 
                 return $btn;

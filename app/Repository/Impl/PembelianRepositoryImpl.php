@@ -31,11 +31,7 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                     return $pembelian->supplier->nama;
 
                 })
-                ->editColumn('karyawan', function (Pembelian $pembelian) {
-
-                    return $pembelian->karyawan->nama;
-
-                })
+              
                 ->editColumn('total_produk', function (Pembelian $pembelian) {
 
                     return count($pembelian->detailPembelian);
@@ -64,15 +60,15 @@ Class PembelianRepositoryImpl implements PembelianRepository {
                     $btn = "";
 
                     if(request()->hasHeader("X-SRC-Pembelian")) {
-                        $btn = $btn . "<a class='pilihPembelian btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='check'></i></a>";
+                        $btn = $btn . "<a class='pilihPembelian btn btn-primary mx-1' id='$pembelian->no_pembelian'><i class='fas fa-check'></i></a>";
                     } else {
                         if($pembelian->status_pembelian == true) {
-                            $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' id='$pembelian->no_pembelian' href='/pembelian/detail-pembelian/print-pdf/$pembelian->no_pembelian'><i class='align-middle' data-feather='printer'></i></a>";
-                            $btn = $btn . "<a class='btn btn-secondary mx-1' href='/pembelian/show-detail/$pembelian->no_pembelian'><i class='align-middle' data-feather='eye'></i></a>";
+                            $btn = $btn . "<a class='printDetailPembelian btn btn-info mx-1' id='$pembelian->no_pembelian' href='/pembelian/detail-pembelian/print-pdf/$pembelian->no_pembelian'><i class='fas fa-print'></i></a>";
+                            $btn = $btn . "<a class='btn btn-secondary mx-1' href='/pembelian/show-detail/$pembelian->no_pembelian'><i class='fas fa-eye'></i></a>";
                         }
                         if($pembelian->status_pembelian == false && $pembelian->karyawan->nik == getNik()) {
-                            $btn = $btn . "<a class='btn btn-primary mx-1' href='/pembelian/$pembelian->no_pembelian'><i class='align-middle' data-feather='edit'></i></a>";
-                            $btn = $btn . "<a class='deletePembelian btn btn-danger mx-1' id='$pembelian->no_pembelian'><i class='align-middle' data-feather='trash'></i></a>";
+                            $btn = $btn . "<a class='btn btn-primary mx-1' href='/pembelian/$pembelian->no_pembelian'><i class='fas fa-edit'></i></a>";
+                            $btn = $btn . "<a class='deletePembelian btn btn-danger mx-1' id='$pembelian->no_pembelian'><i class='fas fa-trash'></i></a>";
                         }
                     }
 

@@ -104,29 +104,19 @@ class UserController extends Controller
 
     public function listUsers()
     {
-        $users = Karyawan::with(["gudang", "jabatan"])->latest()->get();
         if(request()->ajax()) {
-            $data = [];
-            $no = 1 ;
-            foreach($users as $s) {
-                $data[] = [
-                    "number" => $no++,
-                    "nik" => $s->nik,
-                    "nama" => $s->nama,
-                    "gudang" => $s->gudang->nama_gudang,
-                    "alamat" => $s->alamat ?? "-",
-                    "kontak" => $s->kontak ?? "-",
-                    "jabatan" => $s->jabatan->nama_jabatan,
-                ];
-            }
+                return Datatables::of(Karyawan::all())
+                        ->addIndexColumn()
+                        ->addColumn('action', function($karyawan){
+                        
+                            return "<a id='$karyawan->nik' class='hapusKaryawan btn btn-danger'><i class='fas fa-trash'></i></a>";
 
-            return response()->json([
-                "data" => $data
-            ]);
+                        })
+                        ->rawColumns(['action'])
+                        ->make(true);
         }
 
         return response()->view("users.list-users", [
-            "users" => $users,
             "jabatan" => Jabatan::all(),
             "gudang" => Gudang::all()
         ]);
@@ -229,5 +219,29 @@ class UserController extends Controller
                 $response = $exception->validator->errors()->toArray();
                 return response()->json(["error" => $response]);
             }
+    }
+
+    public function delete($nik, Request $request) {
+        if($request->ajax()) {
+            $karyawan = Karyawan::where("nik", $nik)->first();
+            if(!$karyawan) {
+                return response()->json([
+                    "error" => "Data Karyawan Gagal dihapus"
+                ]);
+            } else {
+                $imagePath = public_path('storage/profiles/' . $karyawan->gambar_profile);
+                
+                if (File::exists($imagePath) && $karyawan->gambar_profile != "default.png") {
+
+                    File::delete($imagePath);
+                }
+
+                $karyawan->delete();
+
+                return response()->json([
+                    "success" => "Data karyawan Berhasil di hapus"
+                ]);
+            }
+        }
     }
 }

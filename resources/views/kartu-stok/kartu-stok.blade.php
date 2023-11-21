@@ -146,10 +146,7 @@
                         data: 'tanggal',
                         name: 'tanggal'
                     },
-                ],
-                drawCallback: function( settings ) {
-                    feather.replace();
-                }
+                ]
             });
         });
 

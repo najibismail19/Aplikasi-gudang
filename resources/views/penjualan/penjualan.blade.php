@@ -110,10 +110,7 @@
                   orderable: false,
                   searchable: false
               },
-          ],
-          drawCallback: function( settings ) {
-              feather.replace();
-          }
+          ]
       });
   });
 
